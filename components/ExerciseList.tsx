@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, FlatList } from 'react-native';
 import { Card } from 'react-native-paper';
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -12,46 +13,59 @@ interface Exercise {
 }
 
 export default function ExerciseList({ exercises, setExercises, navigation }: { exercises: Exercise[], setExercises: (exercises: Exercise[]) => void, navigation: any }) {
-    const handleAddExercise = () => {
-        // TODO
-    }
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
     return (
         <View style={styles.container}>
-          {/* Header with Title & Add Button */}
-          <View style={styles.header}>
-            <Text style={styles.title}>Exercises</Text>
-            <TouchableOpacity onPress={handleAddExercise}>
-              <Icon name="plus" size={20} color="white" />
-            </TouchableOpacity>
-          </View>
-    
-          {/* Exercise List */}
-          {exercises.map((exercise, index) => (
-            <TouchableOpacity 
-              key={index} 
-              onPress={() => navigation.navigate("ExerciseDetail", { exercise })}
-              style={styles.cardContainer}
+            <View style={styles.header}>
+                <Text style={styles.title}>Exercises</Text>
+                <TouchableOpacity onPress={() => setShowDropdown(true)}>
+                    <Icon name="plus" size={20} color="white" />
+                </TouchableOpacity>
+            </View>
+
+            <Modal
+                visible={showDropdown}
+                transparent={true}
+                onRequestClose={() => setShowDropdown(false)}
             >
-              {/* Left Column: Image */}
-              <Image source={{ uri: exercise.image }} style={styles.exerciseImage} />
-    
-              {/* Middle Column: Text */}
-              <View style={styles.textContainer}>
-                <Text style={styles.exerciseName}>{exercise.name}</Text>
-                <Text style={styles.exerciseDetails}>
-                  {exercise.sets} Sets • {exercise.reps} Reps • {exercise.weight} lbs
-                </Text>
-              </View>
-    
-              {/* Right Column: Options (More Button) */}
-              <TouchableOpacity style={styles.moreButton} onPress={() => console.log("More options for", exercise.name)}>
-                <Icon name="ellipsis-h" size={20} color="white" />
-              </TouchableOpacity>
-            </TouchableOpacity>
-          ))}
+                <View style={styles.modalView}>
+                    <FlatList
+                        data={exercises}
+                        renderItem={({item}) => (
+                            <TouchableOpacity 
+                                onPress={() => {
+                                    setSelectedExercise(item);
+                                    setShowDropdown(false);
+                                }}
+                            >
+                                <Text style={styles.modalText}>{item.name}</Text>
+                            </TouchableOpacity>
+                        )}
+                        keyExtractor={item => item.id.toString()}
+                    />
+                </View>
+            </Modal>
+
+            {exercises.map((exercise, index) => (
+                <TouchableOpacity 
+                    key={index} 
+                    onPress={() => navigation.navigate("ExerciseDetail", { exercise })}
+                    style={styles.cardContainer}
+                >
+                    <Image source={{ uri: exercise.image }} style={styles.exerciseImage} />
+
+                    <View style={styles.textContainer}>
+                        <Text style={styles.exerciseName}>{exercise.name}</Text>
+                        <Text style={styles.exerciseDetails}>
+                            {exercise.sets} Sets • {exercise.reps} Reps • {exercise.weight} lbs
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            ))}
         </View>
-      );
+    );
 }
 
 const styles = StyleSheet.create({
@@ -99,4 +113,16 @@ const styles = StyleSheet.create({
     moreButton: {
       padding: 5, 
     },
-  });
+    modalView: {
+        margin: 20,
+        backgroundColor: '#1E1E1E',
+        borderRadius: 10,
+        padding: 20,
+        marginTop: 100,
+    },
+    modalText: {
+        color: 'white',
+        fontSize: 16,
+        padding: 10,
+    },
+});
