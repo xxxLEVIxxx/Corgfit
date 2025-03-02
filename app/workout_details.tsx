@@ -135,7 +135,7 @@ export default function WorkoutModal() {
               </TouchableOpacity>
             </ThemedView>
 
-            {/* Wrap FlatList in a View with flex: 1 */}
+            {/* Exercise List */}
             <FlatList
               data={exercises}
               keyExtractor={(item) => item.id}
@@ -156,7 +156,7 @@ export default function WorkoutModal() {
               )}
             />
 
-            {/* Close Button */}
+            {/* Close Button - Simply go back to workout tab */}
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => router.back()}

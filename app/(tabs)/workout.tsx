@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Platform, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, Platform, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Collapsible } from '@/components/Collapsible';
@@ -24,14 +24,23 @@ export default function TabTwoScreen() {
       }>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Workout</ThemedText>
-        <TouchableOpacity 
-          style={styles.addButton}
-          onPress={() => router.push("/workout_details")}
-        >
-          <ThemedText style={styles.addButtonText}>Add Workout</ThemedText>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={styles.addButton}
+            onPress={() => router.push("/workout_details")}
+          >
+            <ThemedText style={styles.buttonText}>Add Workout</ThemedText>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.addButton, styles.summaryButton]}
+            onPress={() => router.push("/workout_summary")}
+          >
+            <ThemedText style={styles.buttonText}>View Summary</ThemedText>
+          </TouchableOpacity>
+        </View>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
+      <ThemedText>This app includes example explode to help you get started.</ThemedText>
       <Collapsible title="File-based routing">
         <ThemedText>
           This app has two screens:{' '}
@@ -112,18 +121,28 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   titleContainer: {
+    flexDirection: 'column',
+    marginBottom: 20,
+  },
+  buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
+    marginTop: 10,
   },
   addButton: {
     backgroundColor: '#007AFF',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
+    flex: 1,
+    marginRight: 10,
+    alignItems: 'center',
   },
-  addButtonText: {
+  summaryButton: {
+    backgroundColor: '#FF9500',
+    marginRight: 0,
+  },
+  buttonText: {
     color: '#fff',
     fontWeight: '600',
   },
