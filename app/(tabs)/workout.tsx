@@ -1,5 +1,4 @@
-import { StyleSheet, Image, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { StyleSheet, Image, Platform, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 
 import { Collapsible } from '@/components/Collapsible';
@@ -26,13 +25,11 @@ interface Exercise {
   weight: number;
 }
 
-
-export default function TabTwoScreen() {
-  const router = useRouter();
+export default function TabTwoScreen(navigation: any) {
   const [targetMuscles, setTargetMuscles] = useState<TargetMuscle[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
-  // Fetch target muscles and exercises from API
+  // fetch target muscles from api
   useEffect(() => {
     setTargetMuscles([
       { name: "Chest", image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
@@ -44,34 +41,20 @@ export default function TabTwoScreen() {
       { name: "Squat", sets: 3, reps: 10, weight: 100, id: 3, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
       { name: "Pull-ups", sets: 3, reps: 10, weight: 100, id: 4, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
       { name: "Push-ups", sets: 3, reps: 10, weight: 100, id: 5, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-      { name: "Curls", sets: 3, reps: 10, weight: 100, id: 6, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
+      { name: "Curls", sets: 3, reps: 10, weight: 100, id: 6, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"   },
       { name: "Dips", sets: 3, reps: 10, weight: 100, id: 7, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
     ]);
   }, []);
   
-
-  // Handle navigation to workout details
   const handleStartWorkout = () => {
-    router.push("/workout_details");
+    // TODO: Implement workout start logic
   };
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Workout Plan</Text>
       <TargetMuscle targetMuscles={targetMuscles} />
-
-      <ExerciseList exercises={exercises} setExercises={setExercises} navigation={router} />
-      
-      {/* Summary Button (Moved to the Top Right) */}
-      <View style={styles.summaryContainer}>
-        <TouchableOpacity 
-          style={[styles.addButton, styles.summaryButton]}
-          onPress={() => router.push("/workout_summary")}
-        >
-          <Text style={styles.buttonText}>View Summary</Text>
-        </TouchableOpacity>
-      </View>
-
+      <ExerciseList exercises={exercises} setExercises={setExercises} navigation={navigation} />
       <TouchableOpacity style={styles.startButton} onPress={handleStartWorkout}>
         <Text style={styles.buttonText}>Start Workout</Text>
       </TouchableOpacity>
@@ -100,21 +83,6 @@ const styles = StyleSheet.create({
     marginBottom: 150,
     marginTop: 30,
   },
-  summaryContainer: {
-    position: "absolute",
-    top: 10,
-    right: 20,
-  },
-  addButton: {
-    backgroundColor: "#007AFF",
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  summaryButton: {
-    backgroundColor: "#4CAF50",
-  },
-
   buttonText: {
     fontSize: 18,
     fontWeight: "bold",
