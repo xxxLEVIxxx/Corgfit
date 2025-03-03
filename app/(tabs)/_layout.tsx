@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
-import { FontAwesome as Icon } from "@expo/vector-icons";
+import { FontAwesome5 as Icon } from "@expo/vector-icons"; // ✅ Use FontAwesome5 instead
 
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
@@ -20,8 +20,7 @@ export default function TabLayout() {
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
+            position: "absolute", // Ensures transparency effect on iOS
           },
           default: {},
         }),
@@ -32,7 +31,7 @@ export default function TabLayout() {
         options={{
           title: "Dashboard",
           tabBarIcon: ({ color }) => (
-            <Icon name="home" size={24} color={Colors[colorScheme ?? "light"].tabIconDefault} />
+            <Icon name="chart-bar" size={24} color={Colors[colorScheme ?? "light"].tabIconDefault} />
           ),
         }}
       />
@@ -41,7 +40,7 @@ export default function TabLayout() {
         options={{
           title: "Workout",
           tabBarIcon: ({ color }) => (
-            <Icon name="heartbeat" size={24} color={Colors[colorScheme ?? "light"].tabIconDefault} />
+            <Icon name="running" size={24} color={Colors[colorScheme ?? "light"].tabIconDefault} />
           ),
         }}
       />
@@ -51,6 +50,15 @@ export default function TabLayout() {
           title: "Me",
           tabBarIcon: ({ color }) => (
             <Icon name="user" size={24} color={Colors[colorScheme ?? "light"].tabIconDefault} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="log"
+        options={{
+          title: "Log",
+          tabBarIcon: ({ color }) => (
+            <Icon name="clipboard-list" size={24} color={Colors[colorScheme ?? "light"].tabIconDefault} />
           ),
         }}
       />
