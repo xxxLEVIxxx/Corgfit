@@ -1,7 +1,8 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
-import { FontAwesome5 as Icon } from "@expo/vector-icons"; // ✅ Use FontAwesome5 instead
+
+import { FontAwesome5 as Icon } from "@expo/vector-icons"; 
 
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
@@ -31,7 +32,9 @@ export default function TabLayout() {
         options={{
           title: "Dashboard",
           tabBarIcon: ({ color }) => (
+
             <Icon name="chart-bar" size={24} color={Colors[colorScheme ?? "light"].tabIconDefault} />
+
           ),
         }}
       />
@@ -49,7 +52,9 @@ export default function TabLayout() {
         options={{
           title: "Me",
           tabBarIcon: ({ color }) => (
+
             <Icon name="user" size={24} color={Colors[colorScheme ?? "light"].tabIconDefault} />
+
           ),
         }}
       />

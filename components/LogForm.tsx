@@ -2,6 +2,7 @@
 import { View, StyleSheet, Button, TextInput, ScrollView } from "react-native";
 import Svg, { Polygon, Text as SvgText } from "react-native-svg";
 import { useEffect, useState } from "react";
+
 import { LogRow } from "./LogRow";
 import React from "react";
 
@@ -75,6 +76,7 @@ export function LogForm({
             +
           </SvgText>
         </Svg>
+
         <View style={styles.button}>
           <Button
             onPress={handleAddSet}

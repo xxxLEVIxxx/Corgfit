@@ -8,6 +8,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+
 import TargetMuscle from '@/components/TargetMuscle';
 import ExerciseList from '@/components/ExerciseList';
 
@@ -24,6 +25,7 @@ interface Exercise {
   reps: number;
   weight: number;
 }
+
 
 export default function TabTwoScreen() {
   const router = useRouter();
@@ -47,6 +49,7 @@ export default function TabTwoScreen() {
     ]);
   }, []);
   
+
   // Handle navigation to workout details
   const handleStartWorkout = () => {
     router.push("/workout_details");
@@ -56,6 +59,7 @@ export default function TabTwoScreen() {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Workout Plan</Text>
       <TargetMuscle targetMuscles={targetMuscles} />
+
       <ExerciseList exercises={exercises} setExercises={setExercises} navigation={router} />
       
       {/* Summary Button (Moved to the Top Right) */}
@@ -68,7 +72,6 @@ export default function TabTwoScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Start Workout Button - Navigates to workout_details */}
       <TouchableOpacity style={styles.startButton} onPress={handleStartWorkout}>
         <Text style={styles.buttonText}>Start Workout</Text>
       </TouchableOpacity>
@@ -111,6 +114,7 @@ const styles = StyleSheet.create({
   summaryButton: {
     backgroundColor: "#4CAF50",
   },
+
   buttonText: {
     fontSize: 18,
     fontWeight: "bold",

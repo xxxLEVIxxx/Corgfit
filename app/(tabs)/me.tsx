@@ -34,7 +34,9 @@ export default function ProfileScreen() {
     }
   };
 
+export default function MeScreen() {
   return (
+
     <ScrollView style={styles.container}>
       {/* Profile Header */}
       <ThemedView style={styles.header}>
@@ -135,6 +137,7 @@ export default function ProfileScreen() {
         <ThemedText style={styles.versionText}>Version 1.0.0</ThemedText>
       </ThemedView>
     </ScrollView>
+
   );
 }
 
@@ -245,5 +248,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 8,
     marginBottom: 30,
+=======
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  stepContainer: {
+    gap: 8,
+    marginBottom: 8,
+  },
+  reactLogo: {
+    height: 178,
+    width: 290,
+    bottom: 0,
+    left: 0,
+    position: "absolute",
   },
 });

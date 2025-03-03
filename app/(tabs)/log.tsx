@@ -1,4 +1,6 @@
+
 //import { color } from "highcharts";
+
 import {
   Pressable,
   StyleSheet,
@@ -10,16 +12,19 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+
   useColorScheme,
 } from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { LogForm } from "../../components/LogForm";
 //import { CloseButton } from "react-bootstrap";
 
+
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TabTwoScreen() {
+
   const colorScheme = useColorScheme();
   const [modalVisible, setModalVisible] = useState(false);
   const [currentSet, setCurrentSet] = useState(1);
@@ -111,6 +116,7 @@ export default function TabTwoScreen() {
 
                 <View
                   style={[styles.separator, { backgroundColor: colorScheme === 'light' ? '#eee' : 'rgba(255,255,255,0.1)' }]}
+
                 />
                 <LogForm
                   currentSet={currentSet}
