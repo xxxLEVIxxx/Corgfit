@@ -2,7 +2,8 @@
 import { View, StyleSheet, Button, TextInput, ScrollView } from "react-native";
 import Svg, { Polygon, Text as SvgText } from "react-native-svg";
 import { useEffect, useState } from "react";
-import { LogRow } from "./LogRow.tsx";
+
+import { LogRow } from "./LogRow";
 import React from "react";
 
 interface LogFormProps {
@@ -75,18 +76,21 @@ export function LogForm({
             +
           </SvgText>
         </Svg>
-        <Button
-          onPress={handleAddSet}
-          title="Add Set"
-          style={styles.button}
-          color={"orange"}
-        />
-        <Button
-          onPress={handleDeleteSet}
-          title="Delete Set"
-          style={styles.button}
-          color={"orange"}
-        />
+
+        <View style={styles.button}>
+          <Button
+            onPress={handleAddSet}
+            title="Add Set"
+            color={"orange"}
+          />
+        </View>
+        <View style={styles.button}>
+          <Button
+            onPress={handleDeleteSet}
+            title="Delete Set"
+            color={"orange"}
+          />
+        </View>
       </View>
     </View>
   );
@@ -154,5 +158,10 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     marginBottom: 100,
+  },
+  button: {
+    borderRadius: 5,
+    overflow: 'hidden',
+    minWidth: 100,
   },
 });
