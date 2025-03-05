@@ -12,6 +12,7 @@ import {
   Dimensions,
 } from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
+import { WebView } from "react-native-webview";
 
 interface HowToModalProps {
   visible: boolean;
@@ -69,16 +70,19 @@ const HowToModal: React.FC<HowToModalProps> = ({ visible, onClose }) => {
           <Text style={styles.closeText}>✖</Text>
         </TouchableOpacity>
 
+        {/* Embedded YouTube Video */}
         <View style={styles.videoContainer}>
-          {Platform.OS !== "web" ? (
-            <Text style={styles.videoPlaceholder}>
-              Watch the tutorial: https://www.youtube.com/watch?v=m90aWKOfu6k
-            </Text>
-          ) : (
-            <Text style={styles.videoPlaceholder}>Video Not Supported on Web</Text>
-          )}
+          <WebView
+            source={{
+              uri: "https://www.youtube.com/embed/NMfBdEV03j8?autoplay=1&playsinline=1&mute=1",
+            }}
+            style={{ width: "100%", height: 315 }}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            allowsInlineMediaPlayback={true} // Required for autoplay on iOS
+            allowsFullscreenVideo={true}     // Allows fullscreen playback
+          />
         </View>
-
         <Text style={styles.title}>Lat Pulldown</Text>
 
         <TabView
@@ -129,15 +133,12 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 10,
     backgroundColor: "#000",
-    justifyContent: "center",
-    alignItems: "center",
+    overflow: "hidden",
     marginBottom: 15,
   },
-  videoPlaceholder: {
-    color: "#fff",
-    fontSize: 16,
-    textAlign: "center",
-    padding: 20,
+  video: {
+    width: "100%",
+    height: "100%",
   },
   title: {
     fontSize: 24,
