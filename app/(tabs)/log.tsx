@@ -16,9 +16,11 @@ import { LogForm } from "@/components/LogForm";
 import { CloseButton } from "react-bootstrap";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import HowToModal from "../(workout)/HowToModal"; // Adjust path if necessary
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TabTwoScreen() {
+  const [HowToModalVisible, setHowToModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentSet, setCurrentSet] = useState(1);
   const [maxSets, setMaxSets] = useState<number>(3);
@@ -97,10 +99,11 @@ export default function TabTwoScreen() {
                 ></Image>
                 <View style={styles.row}>
                   <Text style={styles.title}>Bench Press</Text>
-                  <Pressable style={styles.howto}>
+                  <Pressable style={styles.howto} onPress={() => setHowToModalVisible(true)}>
                     <MaterialIcons name="play-arrow" size={24} color="white" />
                     <Text style={styles.text}>How To</Text>
                   </Pressable>
+                  <HowToModal visible={HowToModalVisible} onClose={() => setHowToModalVisible(false)} />
                 </View>
                 <View style={styles.highlight}>
                   <View style={styles.sideHighlight} />
