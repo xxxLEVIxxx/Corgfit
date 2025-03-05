@@ -19,11 +19,11 @@ export default function WorkoutSummary() {
   const navigation = useNavigation();
   
   // Hide the header when this screen mounts
-  useEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
-    });
-  }, [navigation]);
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     headerShown: false,
+  //   });
+  // }, [navigation]);
   
   // Mock data for the workout summary
   const workoutData = {
@@ -63,8 +63,10 @@ export default function WorkoutSummary() {
 
   // Handle the done button press
   const handleDone = () => {
-    // Navigate back to the workout tab
-    router.replace("/(tabs)/workout");
+    // router.replace("/(tabs)/me");
+    router.back();
+    // router.push("/(tabs)/workout");
+
   };
 
   // Add dynamic styles for theming

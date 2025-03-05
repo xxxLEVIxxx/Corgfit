@@ -1,5 +1,6 @@
 import { StyleSheet, Image, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
+
 import { useState, useEffect } from 'react';
 
 import { Collapsible } from '@/components/Collapsible';
@@ -58,17 +59,16 @@ export default function TabTwoScreen() {
       <TargetMuscle targetMuscles={targetMuscles} />
       <ExerciseList exercises={exercises} setExercises={setExercises} navigation={router} />
       
-      {/* Summary Button (Moved to the Top Right) */}
-      <View style={styles.summaryContainer}>
+      {/* <View style={styles.summaryContainer}>
         <TouchableOpacity 
           style={[styles.addButton, styles.summaryButton]}
           onPress={() => router.push("/workout_summary")}
         >
           <Text style={styles.buttonText}>View Summary</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
-      {/* Start Workout Button - Navigates to workout_details */}
+
       <TouchableOpacity style={styles.startButton} onPress={handleStartWorkout}>
         <Text style={styles.buttonText}>Start Workout</Text>
       </TouchableOpacity>

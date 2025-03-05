@@ -144,22 +144,24 @@ export default function WorkoutModal() {
               contentContainerStyle={styles.listContent}
               style={styles.list}
               renderItem={({ item, index }) => (
-                <ExerciseCard
-                  {...item}
-                  onDelete={deleteExercise}
-                  swipeableRef={ref => swipeableRefs.current[index] = ref}
-                  index={index}
-                  onSwipeableOpen={closeAllSwipeables}
-                  onSwipeableWillOpen={closeAllSwipeables}
-                  colorScheme={colorScheme ?? 'dark'}
-                />
+                <TouchableOpacity onPress={() => {}}>
+                  <ExerciseCard
+                    {...item}
+                    onDelete={deleteExercise}
+                    swipeableRef={ref => swipeableRefs.current[index] = ref}
+                    index={index}
+                    onSwipeableOpen={closeAllSwipeables}
+                    onSwipeableWillOpen={closeAllSwipeables}
+                    colorScheme={colorScheme ?? 'dark'}
+                  />
+                </TouchableOpacity>
               )}
             />
 
             {/* Close Button - Simply go back to workout tab */}
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => router.back()}
+              onPress={() => router.replace('/workout_summary')}
             >
               <Ionicons name="close" size={24} color="white" />
             </TouchableOpacity>
