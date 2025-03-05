@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useRouter } from 'expo-router';
+
 import {
   View,
   Text,
@@ -54,6 +56,8 @@ const HowToModal: React.FC<HowToModalProps> = ({ visible, onClose }) => {
     equipment: EquipmentTab,
   });
 
+  const router = useRouter()
+
   return (
     <Modal
       visible={visible}
@@ -62,7 +66,7 @@ const HowToModal: React.FC<HowToModalProps> = ({ visible, onClose }) => {
       onRequestClose={onClose}
     >
       <View style={styles.modalContainer}>
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+        <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
           <Text style={styles.closeText}>✖</Text>
         </TouchableOpacity>
 

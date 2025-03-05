@@ -1,4 +1,6 @@
-import { StyleSheet, Image, Platform, ScrollView, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
+
 import { useState, useEffect } from 'react';
 
 import { Collapsible } from '@/components/Collapsible';
@@ -7,7 +9,6 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-
 import TargetMuscle from '@/components/TargetMuscle';
 import ExerciseList from '@/components/ExerciseList';
 
@@ -25,11 +26,12 @@ interface Exercise {
   weight: number;
 }
 
-export default function TabTwoScreen(navigation: any) {
+export default function TabTwoScreen() {
+  const router = useRouter();
   const [targetMuscles, setTargetMuscles] = useState<TargetMuscle[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
-  // fetch target muscles from api
+  // Fetch target muscles and exercises from API
   useEffect(() => {
     setTargetMuscles([
       { name: "Chest", image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
@@ -41,20 +43,32 @@ export default function TabTwoScreen(navigation: any) {
       { name: "Squat", sets: 3, reps: 10, weight: 100, id: 3, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
       { name: "Pull-ups", sets: 3, reps: 10, weight: 100, id: 4, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
       { name: "Push-ups", sets: 3, reps: 10, weight: 100, id: 5, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-      { name: "Curls", sets: 3, reps: 10, weight: 100, id: 6, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"   },
+      { name: "Curls", sets: 3, reps: 10, weight: 100, id: 6, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
       { name: "Dips", sets: 3, reps: 10, weight: 100, id: 7, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
     ]);
   }, []);
   
+  // Handle navigation to workout details
   const handleStartWorkout = () => {
-    // TODO: Implement workout start logic
+    router.push("/workout_details");
   };
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Workout Plan</Text>
       <TargetMuscle targetMuscles={targetMuscles} />
-      <ExerciseList exercises={exercises} setExercises={setExercises} navigation={navigation} />
+      <ExerciseList exercises={exercises} setExercises={setExercises} navigation={router} />
+      
+      {/* <View style={styles.summaryContainer}>
+        <TouchableOpacity 
+          style={[styles.addButton, styles.summaryButton]}
+          onPress={() => router.push("/workout_summary")}
+        >
+          <Text style={styles.buttonText}>View Summary</Text>
+        </TouchableOpacity>
+      </View> */}
+
+
       <TouchableOpacity style={styles.startButton} onPress={handleStartWorkout}>
         <Text style={styles.buttonText}>Start Workout</Text>
       </TouchableOpacity>
@@ -82,6 +96,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 150,
     marginTop: 30,
+  },
+  summaryContainer: {
+    position: "absolute",
+    top: 10,
+    right: 20,
+  },
+  addButton: {
+    backgroundColor: "#007AFF",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  summaryButton: {
+    backgroundColor: "#4CAF50",
   },
   buttonText: {
     fontSize: 18,
