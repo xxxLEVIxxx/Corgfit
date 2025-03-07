@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
       },
       muscleText: {
-            color: "white",
+        color: "white",
         marginTop: 5,
       },
       muscleImage: {

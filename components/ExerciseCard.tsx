@@ -7,13 +7,13 @@ import { ThemedView } from "./ThemedView";
 import { ThemedText } from "./ThemedText";
 
 interface ExerciseCardProps {
-  id: string;
+  id: number;
   name: string;
   logged?: string;
   details?: string;
   image: ImageSourcePropType;
   isLogged: boolean;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
   swipeableRef: (ref: Swipeable | null) => void;
   index: number;
   onSwipeableOpen: (index: number) => void;
@@ -98,7 +98,7 @@ const ExerciseCard = ({
 const styles = StyleSheet.create({
   swipeableContainer: {
     marginVertical: 6,
-    marginHorizontal: 20,
+    marginHorizontal: 5,
   },
   exerciseCard: {
     borderRadius: 16,

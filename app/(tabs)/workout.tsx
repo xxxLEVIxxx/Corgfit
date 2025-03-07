@@ -40,8 +40,8 @@ export default function TabTwoScreen() {
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Workout Plan</Text>
-      <TargetMuscle targetMuscles={targetMuscles} />
-      <ExerciseList navigation={router} />
+      <TargetMuscle />
+      <ExerciseList />
       
       {/* <View style={styles.summaryContainer}>
         <TouchableOpacity 
@@ -91,9 +91,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-  },
-  summaryButton: {
-    backgroundColor: "#4CAF50",
   },
   buttonText: {
     fontSize: 18,

@@ -8,6 +8,8 @@ export interface Exercise {
   reps: number;
   weight: number;
   category: string;
+  logged?: string;
+  isLogged?: boolean;
 }
 
 interface ExerciseContextType {
@@ -15,15 +17,18 @@ interface ExerciseContextType {
   setExercises: React.Dispatch<React.SetStateAction<Exercise[]>>;
 }
 
-// Initialize context as undefined to force proper usage through provider
 const ExerciseContext = createContext<ExerciseContextType | undefined>(undefined);
 
-// Provider Component
+// use API to fetch exercises
 export const ExerciseProvider = ({ children }: { children: ReactNode }) => {
   const [exercises, setExercises] = useState<Exercise[]>([
-    { id: 1, name: 'Bench Press', category: 'Chest', image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", sets: 10, reps: 10, weight: 10 },
-    { id: 2, name: 'Deadlift', category: 'Chest', image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", sets: 10, reps: 10, weight: 10 },
-    { id: 3, name: 'Squats', category: 'Legs', image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", sets: 10, reps: 10, weight: 10 },
+      { name: "Bench Press", sets: 3, reps: 10, weight: 100, id: 1, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Chest' },
+      { name: "Deadlift", sets: 3, reps: 10, weight: 100, id: 2, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Chest' },
+      { name: "Squat", sets: 3, reps: 10, weight: 100, id: 3, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Leg' },
+      { name: "Pull-ups", sets: 3, reps: 10, weight: 100, id: 4, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Chest' },
+      { name: "Push-ups", sets: 3, reps: 10, weight: 100, id: 5, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Back' },
+      { name: "Curls", sets: 3, reps: 10, weight: 100, id: 6, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Abs' },
+      { name: "Dips", sets: 3, reps: 10, weight: 100, id: 7, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Chest' },
   ]);
 
   return (
@@ -33,7 +38,6 @@ export const ExerciseProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Custom Hook for easy use
 export const useExercises = () => {
   const context = useContext(ExerciseContext);
   if (!context) {
