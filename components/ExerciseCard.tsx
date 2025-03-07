@@ -1,10 +1,18 @@
-import React from 'react';
-import { StyleSheet, View, Image, ImageSourcePropType, Animated } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
+import React from "react";
+import {
+  StyleSheet,
+  View,
+  Image,
+  ImageSourcePropType,
+  Animated,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from "react-native";
 import { ThemedView } from "./ThemedView";
 import { ThemedText } from "./ThemedText";
+import { useRouter } from "expo-router";
 
 interface ExerciseCardProps {
   id: number;
@@ -18,7 +26,7 @@ interface ExerciseCardProps {
   index: number;
   onSwipeableOpen: (index: number) => void;
   onSwipeableWillOpen: (index: number) => void;
-  colorScheme: 'light' | 'dark';
+  colorScheme: "light" | "dark";
 }
 
 const ExerciseCard = ({
@@ -54,8 +62,8 @@ const ExerciseCard = ({
             },
           ]}
         >
-          <TouchableOpacity 
-            style={styles.deleteButton} 
+          <TouchableOpacity
+            style={styles.deleteButton}
             onPress={() => onDelete(id)}
           >
             <Ionicons name="trash-outline" size={24} color="white" />
@@ -64,7 +72,10 @@ const ExerciseCard = ({
       </View>
     );
   };
-
+  const router = useRouter();
+  const onPressEvent = () => {
+    router.push("/log");
+  };
   return (
     <Swipeable
       ref={swipeableRef}
@@ -75,22 +86,24 @@ const ExerciseCard = ({
       onSwipeableOpen={() => onSwipeableOpen(index)}
       onSwipeableWillOpen={() => onSwipeableWillOpen(index)}
     >
-      <ThemedView 
-        style={[
-          styles.exerciseCard, 
-          { backgroundColor: colorScheme === 'dark' ? '#2A2A2A' : '#F2F2F7' }
-        ]}
-      >
-        <Image source={image} style={styles.exerciseImage} />
-        <View style={styles.exerciseContent}>
-          <ThemedText style={styles.exerciseName}>{name}</ThemedText>
-          {isLogged ? (
-            <ThemedText style={styles.loggedText}>{logged}</ThemedText>
-          ) : (
-            <ThemedText style={styles.detailsText}>{details}</ThemedText>
-          )}
-        </View>
-      </ThemedView>
+      <TouchableWithoutFeedback onPress={() => onPressEvent()}>
+        <ThemedView
+          style={[
+            styles.exerciseCard,
+            { backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#F2F2F7" },
+          ]}
+        >
+          <Image source={image} style={styles.exerciseImage} />
+          <View style={styles.exerciseContent}>
+            <ThemedText style={styles.exerciseName}>{name}</ThemedText>
+            {isLogged ? (
+              <ThemedText style={styles.loggedText}>{logged}</ThemedText>
+            ) : (
+              <ThemedText style={styles.detailsText}>{details}</ThemedText>
+            )}
+          </View>
+        </ThemedView>
+      </TouchableWithoutFeedback>
     </Swipeable>
   );
 };
@@ -113,25 +126,25 @@ const styles = StyleSheet.create({
   },
   deleteActionContainer: {
     width: 80,
-    height: '100%',
-    backgroundColor: '#FF3B30',
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: "100%",
+    backgroundColor: "#FF3B30",
+    justifyContent: "center",
+    alignItems: "center",
     borderTopRightRadius: 16,
     borderBottomRightRadius: 16,
   },
   deleteAction: {
     flex: 1,
-    backgroundColor: '#FF3B30',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
+    backgroundColor: "#FF3B30",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   deleteButton: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   exerciseImage: {
     width: 60,
@@ -149,7 +162,7 @@ const styles = StyleSheet.create({
   },
   loggedText: {
     fontSize: 14,
-    color: '#34C759',
+    color: "#34C759",
   },
   detailsText: {
     fontSize: 14,
@@ -157,4 +170,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ExerciseCard; 
+export default ExerciseCard;

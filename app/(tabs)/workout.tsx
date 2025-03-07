@@ -1,17 +1,24 @@
-import { StyleSheet, Image, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import {
+  StyleSheet,
+  Image,
+  Platform,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useRouter } from "expo-router";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TargetMuscle from '@/components/TargetMuscle';
-import ExerciseList from '@/components/ExerciseList';
-import { useExercises } from '../Context';
+import { Collapsible } from "@/components/Collapsible";
+import { ExternalLink } from "@/components/ExternalLink";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import TargetMuscle from "@/components/TargetMuscle";
+import ExerciseList from "@/components/ExerciseList";
 
 interface TargetMuscle {
   name: string;
@@ -51,7 +58,6 @@ export default function TabTwoScreen() {
           <Text style={styles.buttonText}>View Summary</Text>
         </TouchableOpacity>
       </View> */}
-
 
       <TouchableOpacity style={styles.startButton} onPress={handleStartWorkout}>
         <Text style={styles.buttonText}>Start Workout</Text>

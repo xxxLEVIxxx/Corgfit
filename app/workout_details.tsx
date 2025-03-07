@@ -1,6 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, Image, TouchableOpacity, FlatList, View, Animated, Platform, StatusBar, TouchableWithoutFeedback } from "react-native";
-import { Swipeable, GestureHandlerRootView } from "react-native-gesture-handler";
+import React, { useRef, useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  View,
+  Animated,
+  Platform,
+  StatusBar,
+  TouchableWithoutFeedback,
+} from "react-native";
+import {
+  Swipeable,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 import Modal from "react-native-modal";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -20,7 +33,6 @@ interface Exercise {
   image: any; // We'll improve this type when we have actual images
   isLogged: boolean;
 }
-
 
 export default function WorkoutModal() {
   const colorScheme = useColorScheme();
@@ -96,10 +108,10 @@ export default function WorkoutModal() {
 
   const dynamicStyles = {
     container: {
-      backgroundColor: Colors[colorScheme ?? 'dark'].background,
+      backgroundColor: Colors[colorScheme ?? "dark"].background,
     },
     exerciseCard: {
-      backgroundColor: colorScheme === 'dark' ? '#2A2A2A' : '#F2F2F7',
+      backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#F2F2F7",
     },
   };
 
@@ -115,90 +127,83 @@ export default function WorkoutModal() {
 
   // Add this function to handle exercise deletion
   const deleteExercise = (id: number) => {
-    setExercises(currentExercises => currentExercises.filter(exercise => exercise.id !== id));
+    setExercises((currentExercises) =>
+      currentExercises.filter((exercise) => exercise.id !== id)
+    );
   };
 
   return (
-    <Modal 
-      isVisible={true} 
-      onBackdropPress={() => router.back()} 
-      style={styles.modal}
-      animationIn="slideInUp"
-      animationOut="slideOutDown"
-      backdropOpacity={0.5}
-      statusBarTranslucent
-    >
-      <View style={styles.modalContent}>
-        <GestureHandlerRootView style={styles.rootView}>
-          <ThemedView style={[styles.container, dynamicStyles.container]}>
-            {/* Header */}
-            <ThemedView style={styles.header}>
-              <ThemedText style={styles.headerTitle}>
-                {(exercises || []).length} Exercise{(exercises || []).length !== 1 ? 's' : ''}
-              </ThemedText>
-              <TouchableOpacity onPress={() => router.push("/exercise_selector")}>
-                <Ionicons 
-                  name="add-circle-outline" 
-                  size={24} 
-                  color={Colors[colorScheme ?? 'light'].text} 
-                />
-              </TouchableOpacity>
-            </ThemedView>
-
-            {/* Exercise List */}
-            <FlatList
-              data={exercises}
-              keyExtractor={(item) => item.id.toString()}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={true}
-              contentContainerStyle={styles.listContent}
-              style={styles.list}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity onPress={() => {}}>
-                  <ExerciseCard
-                    {...item}
-                    onDelete={deleteExercise}
-                    swipeableRef={ref => swipeableRefs.current[index] = ref}
-                    index={index}
-                    onSwipeableOpen={closeAllSwipeables}
-                    onSwipeableWillOpen={closeAllSwipeables}
-                    colorScheme={colorScheme ?? 'dark'}
-                  />
-                </TouchableOpacity>
-              )}
-            />
-
-            {/* Close Button - Simply go back to workout tab */}
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => router.replace('/workout_summary')}
-            >
-              <Ionicons name="close" size={24} color="white" />
+    <View style={styles.modalContent}>
+      <GestureHandlerRootView style={styles.rootView}>
+        <ThemedView style={[styles.container, dynamicStyles.container]}>
+          {/* Header */}
+          <ThemedView style={styles.header}>
+            <ThemedText style={styles.headerTitle}>
+              {(exercises || []).length} Exercise
+              {(exercises || []).length !== 1 ? "s" : ""}
+            </ThemedText>
+            <TouchableOpacity onPress={() => router.push("/exercise_selector")}>
+              <Ionicons
+                name="add-circle-outline"
+                size={24}
+                color={Colors[colorScheme ?? "light"].text}
+              />
             </TouchableOpacity>
           </ThemedView>
-        </GestureHandlerRootView>
-      </View>
-    </Modal>
+
+          {/* Exercise List */}
+          <FlatList
+            data={exercises}
+            keyExtractor={(item) => item.id.toString()}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={true}
+            contentContainerStyle={styles.listContent}
+            style={styles.list}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity onPress={() => {}}>
+                <ExerciseCard
+                  {...item}
+                  onDelete={deleteExercise}
+                  swipeableRef={(ref) => (swipeableRefs.current[index] = ref)}
+                  index={index}
+                  onSwipeableOpen={closeAllSwipeables}
+                  onSwipeableWillOpen={closeAllSwipeables}
+                  colorScheme={colorScheme ?? "dark"}
+                />
+              </TouchableOpacity>
+            )}
+          />
+
+          {/* Close Button - Simply go back to workout tab */}
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => router.replace("/workout_summary")}
+          >
+            <Ionicons name="close" size={24} color="white" />
+          </TouchableOpacity>
+        </ThemedView>
+      </GestureHandlerRootView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   modal: {
     margin: 0,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   modalContent: {
     flex: 1,
-    width: '100%',
+    width: "100%",
   },
   rootView: {
     flex: 1,
-    width: '100%',
+    width: "100%",
   },
   container: {
     flex: 1,
-    width: '100%',
-    paddingTop: Platform.OS === 'ios' ? 30 : (StatusBar.currentHeight ?? 20),
+    width: "100%",
+    paddingTop: Platform.OS === "ios" ? 30 : StatusBar.currentHeight ?? 20,
   },
   header: {
     flexDirection: "row",
@@ -229,18 +234,18 @@ const styles = StyleSheet.create({
   },
   deleteActionContainer: {
     width: 80,
-    height: '100%',
-    backgroundColor: '#FF3B30', // iOS red color
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: "100%",
+    backgroundColor: "#FF3B30", // iOS red color
+    justifyContent: "center",
+    alignItems: "center",
     borderTopRightRadius: 16,
     borderBottomRightRadius: 16,
   },
   deleteButton: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   closeButton: {
     position: "absolute",
@@ -269,7 +274,7 @@ const styles = StyleSheet.create({
   },
   loggedText: {
     fontSize: 14,
-    color: '#34C759',  // iOS success green
+    color: "#34C759", // iOS success green
   },
   detailsText: {
     fontSize: 14,
