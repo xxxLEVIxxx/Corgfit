@@ -1,16 +1,24 @@
-import { StyleSheet, Image, Platform, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import {
+  StyleSheet,
+  Image,
+  Platform,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useRouter } from "expo-router";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TargetMuscle from '@/components/TargetMuscle';
-import ExerciseList from '@/components/ExerciseList';
+import { Collapsible } from "@/components/Collapsible";
+import { ExternalLink } from "@/components/ExternalLink";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { IconSymbol } from "@/components/ui/IconSymbol";
+import TargetMuscle from "@/components/TargetMuscle";
+import ExerciseList from "@/components/ExerciseList";
 
 interface TargetMuscle {
   name: string;
@@ -34,20 +42,84 @@ export default function TabTwoScreen() {
   // Fetch target muscles and exercises from API
   useEffect(() => {
     setTargetMuscles([
-      { name: "Chest", image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-      { name: "Back", image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
+      {
+        name: "Chest",
+        image:
+          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+      },
+      {
+        name: "Back",
+        image:
+          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+      },
     ]);
     setExercises([
-      { name: "Bench Press", sets: 3, reps: 10, weight: 100, id: 1, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-      { name: "Deadlift", sets: 3, reps: 10, weight: 100, id: 2, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-      { name: "Squat", sets: 3, reps: 10, weight: 100, id: 3, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-      { name: "Pull-ups", sets: 3, reps: 10, weight: 100, id: 4, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-      { name: "Push-ups", sets: 3, reps: 10, weight: 100, id: 5, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-      { name: "Curls", sets: 3, reps: 10, weight: 100, id: 6, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-      { name: "Dips", sets: 3, reps: 10, weight: 100, id: 7, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
+      {
+        name: "Bench Press",
+        sets: 3,
+        reps: 10,
+        weight: 100,
+        id: 1,
+        image:
+          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+      },
+      {
+        name: "Deadlift",
+        sets: 3,
+        reps: 10,
+        weight: 100,
+        id: 2,
+        image:
+          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+      },
+      {
+        name: "Squat",
+        sets: 3,
+        reps: 10,
+        weight: 100,
+        id: 3,
+        image:
+          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+      },
+      {
+        name: "Pull-ups",
+        sets: 3,
+        reps: 10,
+        weight: 100,
+        id: 4,
+        image:
+          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+      },
+      {
+        name: "Push-ups",
+        sets: 3,
+        reps: 10,
+        weight: 100,
+        id: 5,
+        image:
+          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+      },
+      {
+        name: "Curls",
+        sets: 3,
+        reps: 10,
+        weight: 100,
+        id: 6,
+        image:
+          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+      },
+      {
+        name: "Dips",
+        sets: 3,
+        reps: 10,
+        weight: 100,
+        id: 7,
+        image:
+          "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+      },
     ]);
   }, []);
-  
+
   // Handle navigation to workout details
   const handleStartWorkout = () => {
     router.push("/workout_details");
@@ -57,8 +129,12 @@ export default function TabTwoScreen() {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Workout Plan</Text>
       <TargetMuscle targetMuscles={targetMuscles} />
-      <ExerciseList exercises={exercises} setExercises={setExercises} navigation={router} />
-      
+      <ExerciseList
+        exercises={exercises}
+        setExercises={setExercises}
+        navigation={router}
+      />
+
       {/* <View style={styles.summaryContainer}>
         <TouchableOpacity 
           style={[styles.addButton, styles.summaryButton]}
@@ -67,7 +143,6 @@ export default function TabTwoScreen() {
           <Text style={styles.buttonText}>View Summary</Text>
         </TouchableOpacity>
       </View> */}
-
 
       <TouchableOpacity style={styles.startButton} onPress={handleStartWorkout}>
         <Text style={styles.buttonText}>Start Workout</Text>

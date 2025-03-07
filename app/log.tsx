@@ -16,10 +16,11 @@ import { LogForm } from "@/components/LogForm";
 import { CloseButton } from "react-bootstrap";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import HowToModal from "../(workout)/HowToModal"; // Adjust path if necessary
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
-export default function TabTwoScreen() {
+export default function Log() {
+  const router = useRouter();
   const [HowToModalVisible, setHowToModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentSet, setCurrentSet] = useState(1);
@@ -41,8 +42,8 @@ export default function TabTwoScreen() {
     if (currentSet < maxSets) {
       setCurrentSet(currentSet + 1);
     } else {
-      setModalVisible(false);
       setCurrentSet(1);
+      router.back();
     }
   };
 
@@ -61,91 +62,66 @@ export default function TabTwoScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        {/* this is a naive exercise tile that opens a log page */}
-        <View
-          style={styles.separator}
-          lightColor="#eee"
-          darkColor="rgba(255,255,255,0.1)"
-        />
-        <Pressable style={styles.tile} onPressOut={() => setModalVisible(true)}>
-          <Text style={styles.tile_heading}>Bench Press</Text>
-        </Pressable>
-
-        {/* this is a modal that opens when the tile is pressed */}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.modal}
-          >
-            {/* this is a scroll view that contains the modal content */}
-            <ScrollView
-              style={styles.scroll}
-              ref={scrollRef}
-              contentContainerStyle={{ paddingBottom: 100 }} // Add padding for bottom button
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.modal}
+    >
+      {/* this is a scroll view that contains the modal content */}
+      <ScrollView
+        style={styles.scroll}
+        ref={scrollRef}
+        contentContainerStyle={{ paddingBottom: 100 }} // Add padding for bottom button
+      >
+        <View style={styles.modal}>
+          <Image
+            source={require("@/assets/images/benchpress.png")}
+            style={styles.image}
+          ></Image>
+          <View style={styles.row}>
+            <Text style={styles.title}>Bench Press</Text>
+            <Pressable
+              style={styles.howto}
+              onPress={() => router.push("/HowToModal")}
             >
-              <View style={styles.modal}>
-                <Image
-                  source={require("@/assets/images/benchpress.png")}
-                  style={styles.image}
-                ></Image>
-                <View style={styles.row}>
-                  <Text style={styles.title}>Bench Press</Text>
-                  <Pressable style={styles.howto} onPress={() => setHowToModalVisible(true)}>
-                    <MaterialIcons name="play-arrow" size={24} color="white" />
-                    <Text style={styles.text}>How To</Text>
-                  </Pressable>
-                  <HowToModal visible={HowToModalVisible} onClose={() => setHowToModalVisible(false)} />
-                </View>
-                <View style={styles.highlight}>
-                  <View style={styles.sideHighlight} />
-                  <Text style={styles.highlightText}>
-                    Enter reps and weight to log your first set.
-                  </Text>
-                </View>
+              <MaterialIcons name="play-arrow" size={24} color="white" />
+              <Text style={styles.text}>How To</Text>
+            </Pressable>
+          </View>
+          <View style={styles.highlight}>
+            <View style={styles.sideHighlight} />
+            <Text style={styles.highlightText}>
+              Enter reps and weight to log your first set.
+            </Text>
+          </View>
 
-                <View
-                  style={styles.separator}
-                  lightColor="#eee"
-                  darkColor="rgba(255,255,255,0.1)"
-                />
-                <LogForm
-                  currentSet={currentSet}
-                  onDelete={minusCurrentSet}
-                  updateMaxSets={setMaxSets}
-                  scrollRef={scrollRef}
-                />
-                <Pressable
-                  style={styles.closeButton}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <MaterialIcons name="close" size={24} color="black" />
-                </Pressable>
-              </View>
-            </ScrollView>
+          <View
+            style={styles.separator}
+            lightColor="#eee"
+            darkColor="rgba(255,255,255,0.1)"
+          />
+          <LogForm
+            currentSet={currentSet}
+            onDelete={minusCurrentSet}
+            updateMaxSets={setMaxSets}
+            scrollRef={scrollRef}
+          />
+          <Pressable style={styles.closeButton} onPress={() => router.back()}>
+            <MaterialIcons name="close" size={24} color="black" />
+          </Pressable>
+        </View>
+      </ScrollView>
 
-            {/* this is a button that logs the workout */}
-            <View style={styles.bottom}>
-              <View style={styles.log_button}>
-                <Button
-                  title="Log Workout"
-                  color={"white"}
-                  onPress={handleLogWorkout}
-                />
-              </View>
-            </View>
-          </KeyboardAvoidingView>
-        </Modal>
+      {/* this is a button that logs the workout */}
+      <View style={styles.bottom}>
+        <View style={styles.log_button}>
+          <Button
+            title="Log Workout"
+            color={"white"}
+            onPress={handleLogWorkout}
+          />
+        </View>
       </View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
