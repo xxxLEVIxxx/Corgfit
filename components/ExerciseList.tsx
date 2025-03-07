@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, FlatList, Animated } from 'react-native';
 import { Card } from 'react-native-paper';
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Swipeable } from 'react-native-gesture-handler';
 import { Ionicons } from "@expo/vector-icons";
+import { useExercises } from '@/app/Context';
 
 interface Exercise {
   id: number;
@@ -14,8 +15,23 @@ interface Exercise {
   weight: number;
 }
 
-export default function ExerciseList({ exercises, setExercises, navigation }: { exercises: Exercise[], setExercises: (exercises: Exercise[]) => void, navigation: any }) {
+export default function ExerciseList({ navigation }: { navigation: any }) {
     const [showDropdown, setShowDropdown] = useState(false);
+    const { exercises, setExercises } = useExercises();
+    
+    
+    useEffect(() => {
+        setExercises([
+            { name: "Bench Press", sets: 3, reps: 10, weight: 100, id: 1, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Chest' },
+            { name: "Deadlift", sets: 3, reps: 10, weight: 100, id: 2, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Chest' },
+            { name: "Squat", sets: 3, reps: 10, weight: 100, id: 3, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Leg' },
+            { name: "Pull-ups", sets: 3, reps: 10, weight: 100, id: 4, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Chest' },
+            { name: "Push-ups", sets: 3, reps: 10, weight: 100, id: 5, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Back' },
+            { name: "Curls", sets: 3, reps: 10, weight: 100, id: 6, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Abs' },
+            { name: "Dips", sets: 3, reps: 10, weight: 100, id: 7, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png", category: 'Chest' },
+          ]);
+    }, [])
+
     const onDelete = (index: number) => {
         setExercises(exercises.filter(exercise => exercise.id !== index));
     }
@@ -65,7 +81,7 @@ export default function ExerciseList({ exercises, setExercises, navigation }: { 
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Exercises</Text>
-                <TouchableOpacity onPress={() => setShowDropdown(true)}>
+                <TouchableOpacity onPress={() => navigation.push('/exercise_selector')}>
                     <Icon name="plus" size={20} color="white" />
                 </TouchableOpacity>
             </View>
@@ -128,6 +144,7 @@ export default function ExerciseList({ exercises, setExercises, navigation }: { 
                 contentContainerStyle={styles.listContainer} 
                 showsVerticalScrollIndicator={true}
                 renderItem={({ item }) => (
+                    
                     <TouchableOpacity
                     style={styles.cardContainer}
                     onPress={() => navigation.push("/HowToModal")}
