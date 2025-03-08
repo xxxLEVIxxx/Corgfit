@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   StyleSheet,
   Image,
@@ -20,12 +20,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import ExerciseCard from "../components/ExerciseCard";
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import ExerciseCard from '../components/ExerciseCard';
+import { useExercises } from "./Context";
 
 interface Exercise {
-  id: string;
+  id: number;
   name: string;
   logged?: string;
   details?: string;
@@ -36,65 +37,74 @@ interface Exercise {
 export default function WorkoutDetails() {
   const colorScheme = useColorScheme();
   const router = useRouter();
+  const { exercises, setExercises } = useExercises();
 
-  const [exercises, setExercises] = useState<Exercise[]>([
-    {
-      id: "1",
-      name: "Bench Press",
-      logged: "3/3 Sets Logged",
-      image: require("@/assets/images/Bench_Press.png"),
-      isLogged: true,
-    },
-    {
-      id: "2",
-      name: "Rowing",
-      details: "4 Sets • 4 Reps • 90 lb",
-      image: require("@/assets/images/Barbell_Rows.png"),
-      isLogged: false,
-    },
-    {
-      id: "3",
-      name: "Deadlift",
-      details: "3 Sets • 6 Reps • 160 lb",
-      image: require("@/assets/images/Deadlift.png"),
-      isLogged: false,
-    },
-    {
-      id: "4",
-      name: "Deadlift",
-      details: "3 Sets • 6 Reps • 160 lb",
-      image: require("@/assets/images/Deadlift.png"),
-      isLogged: false,
-    },
-    {
-      id: "5",
-      name: "Bench Press",
-      logged: "3/3 Sets Logged",
-      image: require("@/assets/images/Bench_Press.png"),
-      isLogged: true,
-    },
-    {
-      id: "6",
-      name: "Rowing",
-      details: "4 Sets • 4 Reps • 90 lb",
-      image: require("@/assets/images/Barbell_Rows.png"),
-      isLogged: false,
-    },
-    {
-      id: "7",
-      name: "Rowing",
-      details: "4 Sets • 4 Reps • 90 lb",
-      image: require("@/assets/images/Barbell_Rows.png"),
-      isLogged: false,
-    },
-    {
-      id: "8",
-      name: "Rowing",
-      details: "4 Sets • 4 Reps • 90 lb",
-      image: require("@/assets/images/Barbell_Rows.png"),
-      isLogged: false,
-    },
-  ]);
+  // fake data, should be replaced
+  useEffect(() => {
+    exercises[0].isLogged = true;
+    exercises[0].logged = '3/3 Sets Logged';
+
+    exercises[4].isLogged = true;
+    exercises[4].logged = '3/3 Sets Logged';
+  }, []) 
+  // const [exercises, setExercises] = useState<Exercise[]>([
+  //   {
+  //     id: 1,
+  //     name: "Bench Press",
+  //     logged: "3/3 Sets Logged",
+  //     image: require("@/assets/images/Bench_Press.png"),
+  //     isLogged: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Rowing",
+  //     details: "4 Sets • 4 Reps • 90 lb",
+  //     image: require("@/assets/images/Barbell_Rows.png"),
+  //     isLogged: false,
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Deadlift",
+  //     details: "3 Sets • 6 Reps • 160 lb",
+  //     image: require("@/assets/images/Deadlift.png"),
+  //     isLogged: false,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Deadlift",
+  //     details: "3 Sets • 6 Reps • 160 lb",
+  //     image: require("@/assets/images/Deadlift.png"),
+  //     isLogged: false,
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Bench Press",
+  //     logged: "3/3 Sets Logged",
+  //     image: require("@/assets/images/Bench_Press.png"),
+  //     isLogged: true,
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Rowing",
+  //     details: "4 Sets • 4 Reps • 90 lb",
+  //     image: require("@/assets/images/Barbell_Rows.png"),
+  //     isLogged: false,
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "Rowing",
+  //     details: "4 Sets • 4 Reps • 90 lb",
+  //     image: require("@/assets/images/Barbell_Rows.png"),
+  //     isLogged: false,
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "Rowing",
+  //     details: "4 Sets • 4 Reps • 90 lb",
+  //     image: require("@/assets/images/Barbell_Rows.png"),
+  //     isLogged: false,
+  //   }
+  // ]);
 
   const dynamicStyles = {
     container: {
@@ -115,7 +125,8 @@ export default function WorkoutDetails() {
     });
   };
 
-  const deleteExercise = (id: string) => {
+  // Add this function to handle exercise deletion
+  const deleteExercise = (id: number) => {
     setExercises((currentExercises) =>
       currentExercises.filter((exercise) => exercise.id !== id)
     );
@@ -143,13 +154,13 @@ export default function WorkoutDetails() {
           {/* Exercise List */}
           <FlatList
             data={exercises}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={true}
             contentContainerStyle={styles.listContent}
             style={styles.list}
             renderItem={({ item, index }) => (
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={() => {router.push('/log')}}>
                 <ExerciseCard
                   {...item}
                   onDelete={deleteExercise}
