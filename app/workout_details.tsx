@@ -14,9 +14,9 @@ import {
   Swipeable,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
-import Modal from "react-native-modal";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
@@ -29,11 +29,11 @@ interface Exercise {
   name: string;
   logged?: string;
   details?: string;
-  image: any; // We'll improve this type when we have actual images
+  image: any;
   isLogged: boolean;
 }
 
-export default function WorkoutModal() {
+export default function WorkoutDetails() {
   const colorScheme = useColorScheme();
   const router = useRouter();
 
@@ -98,7 +98,7 @@ export default function WorkoutModal() {
 
   const dynamicStyles = {
     container: {
-      backgroundColor: Colors[colorScheme ?? "dark"].background,
+      backgroundColor: Colors[colorScheme === 'light' ? 'light' : 'dark'].background,
     },
     exerciseCard: {
       backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#F2F2F7",
@@ -115,7 +115,6 @@ export default function WorkoutModal() {
     });
   };
 
-  // Add this function to handle exercise deletion
   const deleteExercise = (id: string) => {
     setExercises((currentExercises) =>
       currentExercises.filter((exercise) => exercise.id !== id)
@@ -123,7 +122,7 @@ export default function WorkoutModal() {
   };
 
   return (
-    <View style={styles.modalContent}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme === 'light' ? 'light' : 'dark'].background }}>
       <GestureHandlerRootView style={styles.rootView}>
         <ThemedView style={[styles.container, dynamicStyles.container]}>
           {/* Header */}
@@ -136,7 +135,7 @@ export default function WorkoutModal() {
               <Ionicons
                 name="add-circle-outline"
                 size={24}
-                color={Colors[colorScheme ?? "light"].text}
+                color={Colors[colorScheme === 'light' ? 'light' : 'dark'].text}
               />
             </TouchableOpacity>
           </ThemedView>
@@ -158,13 +157,13 @@ export default function WorkoutModal() {
                   index={index}
                   onSwipeableOpen={closeAllSwipeables}
                   onSwipeableWillOpen={closeAllSwipeables}
-                  colorScheme={colorScheme ?? "dark"}
+                  colorScheme={colorScheme === 'light' ? 'light' : 'dark'}
                 />
               </TouchableOpacity>
             )}
           />
 
-          {/* Close Button - Simply go back to workout tab */}
+          {/* Close Button */}
           <TouchableOpacity
             style={styles.closeButton}
             onPress={() => router.replace("/workout_summary")}
@@ -173,19 +172,11 @@ export default function WorkoutModal() {
           </TouchableOpacity>
         </ThemedView>
       </GestureHandlerRootView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  modal: {
-    margin: 0,
-    justifyContent: "flex-end",
-  },
-  modalContent: {
-    flex: 1,
-    width: "100%",
-  },
   rootView: {
     flex: 1,
     width: "100%",
@@ -193,7 +184,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    paddingTop: Platform.OS === "ios" ? 30 : StatusBar.currentHeight ?? 20,
   },
   header: {
     flexDirection: "row",
@@ -225,7 +215,7 @@ const styles = StyleSheet.create({
   deleteActionContainer: {
     width: 80,
     height: "100%",
-    backgroundColor: "#FF3B30", // iOS red color
+    backgroundColor: "#FF3B30",
     justifyContent: "center",
     alignItems: "center",
     borderTopRightRadius: 16,
@@ -264,7 +254,7 @@ const styles = StyleSheet.create({
   },
   loggedText: {
     fontSize: 14,
-    color: "#34C759", // iOS success green
+    color: "#34C759",
   },
   detailsText: {
     fontSize: 14,

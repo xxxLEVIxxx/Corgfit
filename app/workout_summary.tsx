@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Image, ScrollView, Platform, StatusBar } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context"; // Import SafeAreaView
-import { useRouter, useNavigation } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import Modal from "react-native-modal";
+import React from "react";
+import { StyleSheet, View, TouchableOpacity, Image, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
@@ -16,14 +14,6 @@ export default function WorkoutSummary() {
   const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
   const router = useRouter();
-  const navigation = useNavigation();
-  
-  // Hide the header when this screen mounts
-  // useEffect(() => {
-  //   navigation.setOptions({
-  //     headerShown: false,
-  //   });
-  // }, [navigation]);
   
   // Mock data for the workout summary
   const workoutData = {
@@ -61,37 +51,20 @@ export default function WorkoutSummary() {
     ]
   };
 
-  // Handle the done button press
   const handleDone = () => {
-    // router.replace("/(tabs)/me");
     router.back();
-    // router.push("/(tabs)/workout");
-
   };
 
-  // Add dynamic styles for theming
   const dynamicStyles = {
     container: {
-      backgroundColor: Colors[colorScheme ?? 'dark'].background,
+      backgroundColor: Colors[colorScheme === 'light' ? 'light' : 'dark'].background,
     },
   };
 
   return (
-      <Modal
-        isVisible={true}
-        style={{ margin: 0, justifyContent: 'flex-end' }}
-        backdropOpacity={0}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-        statusBarTranslucent
-      >
-      <View style={{ flex: 1, width: '100%' }}>
-        <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme ?? 'dark'].background }}>
-          <ThemedView   style={[
-                                styles.container,
-                                dynamicStyles.container,
-                                { paddingTop: insets.top + 20 } // Add extra top padding
-                              ]}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme === 'light' ? 'light' : 'dark'].background }}>
+      <ThemedView style={[styles.container, dynamicStyles.container]}>
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           {/* Header with Summary and Date */}
           <View style={styles.header}>
             <ThemedText style={styles.headerTitle}>Summary</ThemedText>
@@ -131,38 +104,38 @@ export default function WorkoutSummary() {
           </ThemedText>
           
           {/* Exercise List */}
-          <ScrollView style={styles.exerciseList}>
+          <View style={styles.exerciseList}>
             {workoutData.exercises.map((exercise) => (
               <WorkoutSummaryExerciseItem 
                 key={exercise.id}
                 exercise={exercise}
               />
             ))}
-          </ScrollView>
-          
-          {/* Done Button */}
-          <TouchableOpacity 
-            style={styles.doneButton}
-            onPress={handleDone}
-          >
-            <ThemedText style={styles.doneButtonText}>Done</ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
-      </SafeAreaView>
-      </View>
-    </Modal>
+          </View>
+        </ScrollView>
+        
+        {/* Done Button */}
+        <TouchableOpacity 
+          style={styles.doneButton}
+          onPress={handleDone}
+        >
+          <ThemedText style={styles.doneButtonText}>Done</ThemedText>
+        </TouchableOpacity>
+      </ThemedView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  modal: {
-    margin: 0,
-    justifyContent: 'flex-end',
-  },
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    // You can remove manual paddingTop since SafeAreaView handles it
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingTop: 20,
   },
   header: {
     flexDirection: "row",
@@ -171,7 +144,7 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   headerTitle: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: "bold",
     fontStyle: "italic",
   },
@@ -206,13 +179,13 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   statsLeftSpacer: {
-    flex: 1, // Takes up space from left edge to 25% mark
+    flex: 1,
   },
   statsCenterSpacer: {
-    flex: 2, // Takes up space between Calories (25%) and PRs (75%)
+    flex: 2,
   },
   statsRightSpacer: {
-    flex: 1, // Takes up space from 75% mark to right edge
+    flex: 1,
   },
   statItem: {
     alignItems: "center",

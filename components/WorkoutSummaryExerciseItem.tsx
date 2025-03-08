@@ -22,9 +22,9 @@ interface WorkoutSummaryExerciseItemProps {
 }
 
 const WorkoutSummaryExerciseItem = ({ exercise }: WorkoutSummaryExerciseItemProps) => {
-  // Split sets into columns if there are more than 4 sets
-  const firstColumn = exercise.sets.slice(0, 4);
-  const secondColumn = exercise.sets.slice(4);
+  // Split sets into columns of 3 instead of 4
+  const firstColumn = exercise.sets.slice(0, 3);
+  const secondColumn = exercise.sets.slice(3);
   
   return (
     <ThemedView style={styles.container}>
@@ -55,7 +55,7 @@ const WorkoutSummaryExerciseItem = ({ exercise }: WorkoutSummaryExerciseItemProp
           </View>
           
           <View style={styles.setsOuterContainer}>
-            {/* First column of sets - always show up to 4 sets */}
+            {/* First column of sets - always show up to 3 sets */}
             <View style={styles.setsContainer}>
               {firstColumn.map((set, index) => (
                 <ThemedText key={`first-${index}`} style={styles.setInfo}>
@@ -63,13 +63,13 @@ const WorkoutSummaryExerciseItem = ({ exercise }: WorkoutSummaryExerciseItemProp
                 </ThemedText>
               ))}
               
-              {/* Add empty placeholders if less than 4 sets to maintain consistent height */}
-              {Array.from({ length: Math.max(0, 4 - firstColumn.length) }).map((_, index) => (
+              {/* Add empty placeholders if less than 3 sets to maintain consistent height */}
+              {Array.from({ length: Math.max(0, 3 - firstColumn.length) }).map((_, index) => (
                 <View key={`placeholder-${index}`} style={styles.setPlaceholder} />
               ))}
             </View>
             
-            {/* Second column of sets if more than 4 sets */}
+            {/* Second column of sets if more than 3 sets */}
             {secondColumn.length > 0 && (
               <View style={[styles.setsContainer, styles.secondColumn]}>
                 {secondColumn.map((set, index) => (
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
     backgroundColor: "#2A2A2A",
-    minHeight: 140, // Height to accommodate 4 sets plus header
+    minHeight: 110, // Reduced height to accommodate 3 sets plus header
   },
   imageContainer: {
     width: 80,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 90,
     borderRadius: 12,
-    transform: [{ scaleY: 1.5 }], // visually increase the height by 50%
+    transform: [{ scaleY: 1.0 }], // visually increase the height by 50%
   },
   exerciseContent: {
     flex: 1,
@@ -140,11 +140,11 @@ const styles = StyleSheet.create({
   setInfo: {
     fontSize: 14,
     opacity: 0.8,
-    marginBottom: 8, // Slightly more space between sets
+    marginBottom: 1, // Reduced from 8 to 4 for tighter spacing between reps
     height: 20, // Fixed height for each set
   },
   setPlaceholder: {
-    height: 28, // Height of a set (20) + marginBottom (8)
+    height: 24, // Reduced from 28 to 24 (height of set (20) + marginBottom (4))
   },
   prBadge: {
     backgroundColor: "#FF4D4D",
