@@ -20,6 +20,8 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TargetMuscle from "@/components/TargetMuscle";
 import ExerciseList from "@/components/ExerciseList";
 
+import { useExercises } from "../Context";
+
 interface TargetMuscle {
   name: string;
   image: string;

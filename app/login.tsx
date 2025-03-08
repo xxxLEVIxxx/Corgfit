@@ -14,7 +14,7 @@ export default function Login() {
 
     const handleLogIn = () => {
       // check log in here
-      router.push('/workout')
+      router.replace('/workout')
     }
 
     useEffect(() => {
@@ -38,25 +38,25 @@ export default function Login() {
     return (
         <View style={styles.container}>
             <Image source={getImage()} style={styles.logo} />
-        <Text style={styles.title}>CORGFIT</Text>
+            <Text style={styles.title}>CORGFIT</Text>
 
-        <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} placeholderTextColor="#888" />
-        <TextInput placeholder="Password" style={styles.input} value={passwd} onChangeText={setPasswd} placeholderTextColor="#888" secureTextEntry />
+            <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} placeholderTextColor="#888" />
+            <TextInput placeholder="Password" style={styles.input} value={passwd} onChangeText={setPasswd} placeholderTextColor="#888" secureTextEntry />
 
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogIn}>
-            <Text style={styles.loginButtonText}>Log in</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.googleButton}>
-            <FontAwesome name="google" size={30} color="#fff" />
-        </TouchableOpacity>
-
-        <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>Don't have an account?</Text>
-            <TouchableOpacity onPress={() => router.push('/signup')}>
-                <Text style={styles.signupLink}>Sign up</Text>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogIn}>
+                <Text style={styles.loginButtonText}>Log in</Text>
             </TouchableOpacity>
-        </View>
-        
+            <TouchableOpacity style={styles.googleButton}>
+                <FontAwesome name="google" size={30} color="#fff" />
+            </TouchableOpacity>
+
+            <View style={styles.signupContainer}>
+                <Text style={styles.signupText}>Don't have an account?</Text>
+                <TouchableOpacity onPress={() => router.push('/signup')}>
+                    <Text style={styles.signupLink}>Sign up</Text>
+                </TouchableOpacity>
+            </View>
+            
         </View>
     );
 }
