@@ -160,7 +160,7 @@ export default function WorkoutModal() {
             contentContainerStyle={styles.listContent}
             style={styles.list}
             renderItem={({ item, index }) => (
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={() => {router.push('/log')}}>
                 <ExerciseCard
                   {...item}
                   onDelete={deleteExercise}

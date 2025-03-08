@@ -86,24 +86,22 @@ const ExerciseCard = ({
       onSwipeableOpen={() => onSwipeableOpen(index)}
       onSwipeableWillOpen={() => onSwipeableWillOpen(index)}
     >
-      <TouchableWithoutFeedback onPress={() => onPressEvent()}>
-        <ThemedView
-          style={[
-            styles.exerciseCard,
-            { backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#F2F2F7" },
-          ]}
-        >
-          <Image source={image} style={styles.exerciseImage} />
-          <View style={styles.exerciseContent}>
-            <ThemedText style={styles.exerciseName}>{name}</ThemedText>
-            {isLogged ? (
-              <ThemedText style={styles.loggedText}>{logged}</ThemedText>
-            ) : (
-              <ThemedText style={styles.detailsText}>{details}</ThemedText>
-            )}
-          </View>
-        </ThemedView>
-      </TouchableWithoutFeedback>
+      <ThemedView
+        style={[
+          styles.exerciseCard,
+          { backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#F2F2F7" },
+        ]}
+      >
+        <Image source={image} style={styles.exerciseImage} />
+        <View style={styles.exerciseContent}>
+          <ThemedText style={styles.exerciseName}>{name}</ThemedText>
+          {isLogged ? (
+            <ThemedText style={styles.loggedText}>{logged}</ThemedText>
+          ) : (
+            <ThemedText style={styles.detailsText}>{details}</ThemedText>
+          )}
+        </View>
+      </ThemedView>
     </Swipeable>
   );
 };
