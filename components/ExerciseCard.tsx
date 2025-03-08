@@ -15,13 +15,13 @@ import { ThemedText } from "./ThemedText";
 import { useRouter } from "expo-router";
 
 interface ExerciseCardProps {
-  id: string;
+  id: number;
   name: string;
   logged?: string;
   details?: string;
   image: ImageSourcePropType;
   isLogged: boolean;
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
   swipeableRef: (ref: Swipeable | null) => void;
   index: number;
   onSwipeableOpen: (index: number) => void;
@@ -86,24 +86,22 @@ const ExerciseCard = ({
       onSwipeableOpen={() => onSwipeableOpen(index)}
       onSwipeableWillOpen={() => onSwipeableWillOpen(index)}
     >
-      <TouchableWithoutFeedback onPress={() => onPressEvent()}>
-        <ThemedView
-          style={[
-            styles.exerciseCard,
-            { backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#F2F2F7" },
-          ]}
-        >
-          <Image source={image} style={styles.exerciseImage} />
-          <View style={styles.exerciseContent}>
-            <ThemedText style={styles.exerciseName}>{name}</ThemedText>
-            {isLogged ? (
-              <ThemedText style={styles.loggedText}>{logged}</ThemedText>
-            ) : (
-              <ThemedText style={styles.detailsText}>{details}</ThemedText>
-            )}
-          </View>
-        </ThemedView>
-      </TouchableWithoutFeedback>
+      <ThemedView
+        style={[
+          styles.exerciseCard,
+          { backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#F2F2F7" },
+        ]}
+      >
+        <Image source={image} style={styles.exerciseImage} />
+        <View style={styles.exerciseContent}>
+          <ThemedText style={styles.exerciseName}>{name}</ThemedText>
+          {isLogged ? (
+            <ThemedText style={styles.loggedText}>{logged}</ThemedText>
+          ) : (
+            <ThemedText style={styles.detailsText}>{details}</ThemedText>
+          )}
+        </View>
+      </ThemedView>
     </Swipeable>
   );
 };
@@ -111,7 +109,7 @@ const ExerciseCard = ({
 const styles = StyleSheet.create({
   swipeableContainer: {
     marginVertical: 6,
-    marginHorizontal: 20,
+    marginHorizontal: 5,
   },
   exerciseCard: {
     borderRadius: 16,
