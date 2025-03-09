@@ -40,6 +40,7 @@ export default function WorkoutDetails() {
   const { exercises, setExercises } = useExercises();
 
   // fake data, should be replaced
+  //Below logs 2 exercises from context.tsx
   useEffect(() => {
     exercises[0].isLogged = true;
     exercises[0].logged = '3/3 Sets Logged';
