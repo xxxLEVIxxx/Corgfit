@@ -39,73 +39,21 @@ export default function WorkoutDetails() {
   const router = useRouter();
   const { exercises, setExercises } = useExercises();
 
-  // fake data, should be replaced
-  //Below logs 2 exercises from context.tsx
+  // Set initial logged exercises, 0 and 4 as an example
   useEffect(() => {
-    exercises[0].isLogged = true;
-    exercises[0].logged = '3/3 Sets Logged';
-
-    exercises[4].isLogged = true;
-    exercises[4].logged = '3/3 Sets Logged';
-  }, []) 
-  // const [exercises, setExercises] = useState<Exercise[]>([
-  //   {
-  //     id: 1,
-  //     name: "Bench Press",
-  //     logged: "3/3 Sets Logged",
-  //     image: require("@/assets/images/Bench_Press.png"),
-  //     isLogged: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Rowing",
-  //     details: "4 Sets • 4 Reps • 90 lb",
-  //     image: require("@/assets/images/Barbell_Rows.png"),
-  //     isLogged: false,
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Deadlift",
-  //     details: "3 Sets • 6 Reps • 160 lb",
-  //     image: require("@/assets/images/Deadlift.png"),
-  //     isLogged: false,
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Deadlift",
-  //     details: "3 Sets • 6 Reps • 160 lb",
-  //     image: require("@/assets/images/Deadlift.png"),
-  //     isLogged: false,
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Bench Press",
-  //     logged: "3/3 Sets Logged",
-  //     image: require("@/assets/images/Bench_Press.png"),
-  //     isLogged: true,
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Rowing",
-  //     details: "4 Sets • 4 Reps • 90 lb",
-  //     image: require("@/assets/images/Barbell_Rows.png"),
-  //     isLogged: false,
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Rowing",
-  //     details: "4 Sets • 4 Reps • 90 lb",
-  //     image: require("@/assets/images/Barbell_Rows.png"),
-  //     isLogged: false,
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "Rowing",
-  //     details: "4 Sets • 4 Reps • 90 lb",
-  //     image: require("@/assets/images/Barbell_Rows.png"),
-  //     isLogged: false,
-  //   }
-  // ]);
+    setExercises(currentExercises => 
+      currentExercises.map((exercise, index) => {
+        if (index === 0 || index === 4) {
+          return {
+            ...exercise,
+            isLogged: true,
+            logged: '3/3 Sets Logged'
+          };
+        }
+        return exercise;
+      })
+    );
+  }, []);
 
   const dynamicStyles = {
     container: {
@@ -164,6 +112,7 @@ export default function WorkoutDetails() {
               <TouchableOpacity onPress={() => {router.push('/log')}}>
                 <ExerciseCard
                   {...item}
+                  isLogged={item.isLogged || false}
                   onDelete={deleteExercise}
                   swipeableRef={(ref) => (swipeableRefs.current[index] = ref)}
                   index={index}
