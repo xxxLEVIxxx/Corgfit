@@ -37,14 +37,23 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ExerciseProvider>
-        <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <ThemeProvider
+          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
           <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="login" options={{ headerShown: false }} />
             <Stack.Screen name="signup" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
-            <Stack.Screen name="workout_details" options={{ headerShown: false }} />
-            <Stack.Screen name="workout_summary" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="workout_details"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="workout_summary"
+              options={{ headerShown: false }}
+            />
             <Stack.Screen name="log" options={{ headerShown: false }} />
             <Stack.Screen name="HowToModal" options={{ headerShown: false }} />
           </Stack>
