@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFonts, PermanentMarker_400Regular } from '@expo-google-fonts/permanent-marker';
@@ -8,40 +8,78 @@ export default function Login() {
     const [fontsLoaded] = useFonts({ PermanentMarker_400Regular });
     const [passwd, setPasswd] = useState('');
     const [email, setEmail] = useState('');
+    const [index, setIndex] = useState(0);
+    const [startAnimation, setStartAnimation] = useState(false);
+    const [reverseAnimation, setReverseAnimation] = useState(false);
+
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
 
     const router = useRouter();
-    const navigation = useNavigation();
 
     const handleLogIn = () => {
       // check log in here
       router.replace('/workout')
     }
 
-    useEffect(() => {
-      navigation.setOptions({ headerShown: false });
-    }, []);
+    const handleFocus = () => {
+        setStartAnimation(true);
+        setReverseAnimation(false)
+        setIndex(0);
+    }
 
-    const images = {
-        'corgi-1': require('../assets/images/corgi-1.png'),
-        'corgi-2': require('../assets/images/corgi-2.png'),
-        'corgi-3': require('../assets/images/corgi-3.png'),
-        'corgi-4': require('../assets/images/corgi-4.png'),
+    const handleBlur = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      setReverseAnimation(true);
+      setStartAnimation(false);
+    }
+
+    useEffect(() => {
+      if (startAnimation && index < images.length - 1) {
+        timeoutRef.current = setTimeout(() => {
+          setIndex(prevIndex => prevIndex + 1);
+        }, 150); 
+      } else if (startAnimation && index === images.length - 1) {
+        setStartAnimation(false);
+      }
+
+      return () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
       };
+    }, [startAnimation, index]);
+
+    useEffect(() => {
+      if (reverseAnimation && index > 0) {
+        timeoutRef.current = setTimeout(() => {
+          setIndex(prev => prev - 1);
+        }, 150);
+      } else if (reverseAnimation && index === 0) {
+        setReverseAnimation(false);
+      }
+      return () => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      };
+    }, [reverseAnimation, index]);
+
+    const images = [
+        require('../assets/images/corgi-1.png'),
+        require('../assets/images/corgi-2.png'),
+        require('../assets/images/corgi-3.png'),
+        require('../assets/images/corgi-4.png'),
+    ]
       
-      const getImage = () => {
-        if (passwd.length === 0) return images['corgi-1'];
-        if (passwd.length <= 2) return images['corgi-2'];
-        if (passwd.length <= 4) return images['corgi-3'];
-        return images['corgi-4'];
-      };
       
     return (
         <View style={styles.container}>
-            <Image source={getImage()} style={styles.logo} />
-            <Text style={styles.title}>CORGFIT</Text>
+            <Image source={images[index]} style={styles.logo} />
+            <Text style={styles.title}> CORGFIT </Text>
 
             <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} placeholderTextColor="#888" />
-            <TextInput placeholder="Password" style={styles.input} value={passwd} onChangeText={setPasswd} placeholderTextColor="#888" secureTextEntry />
+            <TextInput placeholder="Password" style={styles.input} value={passwd} onChangeText={setPasswd} placeholderTextColor="#888" secureTextEntry onFocus={handleFocus} onBlur={handleBlur}/>
 
             <TouchableOpacity style={styles.loginButton} onPress={handleLogIn}>
                 <Text style={styles.loginButtonText}>Log in</Text>
