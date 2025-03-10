@@ -3,9 +3,13 @@ import { Text, View, StyleSheet, Pressable } from "react-native";
 import Streak from "@/components/Streak";
 import ExerciseGoal from "@/components/ExerciseGoal";
 import PR from "@/components/PR";
+import MusclesTile from "@/components/MusclesTile";
+import WeightTile from "@/components/WeightTile"
+import ChartsTile from "@/components/ChartsTile";
 
 interface LoginProps {
   lastLoginDate: string;
+  
   streakCount: number;
 }
 
@@ -13,6 +17,15 @@ interface ExerciseGoalProps {
   goal: number;
   progress: number;
   exerciseName: string;
+}
+
+interface WeightProps {
+  weight_this_week: number;
+  weight_last_week: number;
+}
+
+interface MusclesProps {
+  muscles: string;
 }
 
 export default function dashboard() {
@@ -27,6 +40,17 @@ export default function dashboard() {
       progress: 125,
       exerciseName: "Bench Press",
     });
+  
+  const [musclesProps, setMusclesProps] =
+    React.useState<MusclesProps>({
+      muscles: "Chest",
+    });
+  
+  const [weightProps, setWeightProps] =
+    React.useState<WeightProps>({
+      weight_this_week: 173,
+      weight_last_week: 176,
+    });
 
   return (
     <View style={styles.container}>
@@ -40,7 +64,10 @@ export default function dashboard() {
               lastLoginDate={loginProps.lastLoginDate}
             />
           </Pressable>
-          <Pressable style={styles.card}></Pressable>
+          <Pressable style={styles.card}>
+          <MusclesTile muscles={musclesProps.muscles} />
+          {/* target muscles components */}
+          </Pressable>
         </View>
         <View style={styles.row}>
           <Pressable style={styles.card}>
@@ -50,13 +77,21 @@ export default function dashboard() {
               exerciseName={exerciseGoalProps.exerciseName}
             ></ExerciseGoal>
           </Pressable>
-          <Pressable style={styles.card}></Pressable>
+          <Pressable style={styles.card}>
+            <WeightTile
+              weight_this_week={weightProps.weight_this_week}
+              weight_last_week={weightProps.weight_last_week}
+            />
+            {/* weight components */}
+          </Pressable>
         </View>
         <View style={styles.row}>
           <Pressable style={styles.card}>
             <PR />
           </Pressable>
-          <Pressable style={styles.card}></Pressable>
+          <Pressable style={styles.card}>
+          <ChartsTile chartTitle="Progress Chart" />
+          </Pressable>
         </View>
       </View>
     </View>
