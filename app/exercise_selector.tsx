@@ -8,23 +8,22 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useExercises } from "./Context";
+import { useExercises, Exercise, EXERCISE_DATA } from "./Context";
 
 // This will come from your DB later
-const allExercises = [
-  { id: 11, name: 'Bench Press', category: 'Chest', sets: 3, weight: 100, reps: 10, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-  { id: 12, name: 'Deadlift', category: 'Back', sets: 3, weight: 100, reps: 10, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
-  { id: 13, name: 'Squats', category: 'Legs',  sets: 3, weight: 100, reps: 10, image: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" },
+const allExercises: Exercise[] = [
+  { id: 11, name: 'Bench Press', category: 'Chest', sets: 3, weight: 100, reps: 10, image: EXERCISE_DATA["Bench Press"][1] },
+  { id: 12, name: 'Deadlift', category: 'Back', sets: 3, weight: 100, reps: 10, image: EXERCISE_DATA["Deadlift"][1] },
+  { id: 13, name: 'Barbell Squats', category: 'Legs', sets: 3, weight: 100, reps: 10, image: EXERCISE_DATA["Barbell Squats"][1] },
   // ... more exercises
 ];
 
 export default function ExerciseSelector() {
-
   const { exercises, setExercises } = useExercises();
   const colorScheme = useColorScheme();
   const router = useRouter();
 
-  const handleSelectExercise = (exercise) => {
+  const handleSelectExercise = (exercise: Exercise) => {
     // Here you'll add the exercise to your workout
     // For now, just go back
     setExercises(() => [...exercises, exercise]);
@@ -37,7 +36,11 @@ export default function ExerciseSelector() {
         <ThemedView style={styles.header}>
           <ThemedText style={styles.headerTitle}>Select Exercise</ThemedText>
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="close" size={24} color={Colors[colorScheme ?? 'light'].text} />
+            <Ionicons 
+              name="close" 
+              size={24} 
+              color={Colors[colorScheme === 'light' ? 'light' : 'dark'].text} 
+            />
           </TouchableOpacity>
         </ThemedView>
 
