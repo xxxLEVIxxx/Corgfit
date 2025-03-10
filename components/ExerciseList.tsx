@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, FlatList, Animated } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Swipeable } from 'react-native-gesture-handler';
 import { Ionicons } from "@expo/vector-icons";
-import { useExercises, EXERCISE_DATA } from '@/app/Context';
+import { useExercises } from '@/app/Context';
 import { useRouter } from 'expo-router';
 import ExerciseCard from './ExerciseCard';
 
@@ -20,18 +20,6 @@ export default function ExerciseList() {
     const { exercises, setExercises } = useExercises();
     const router = useRouter();
     
-    useEffect(() => {
-        setExercises([
-            { name: "Bench Press", sets: 3, reps: 10, weight: 100, id: 1, image: EXERCISE_DATA["Bench Press"][1], category: 'Chest' },
-            { name: "Deadlift", sets: 3, reps: 10, weight: 100, id: 2, image: EXERCISE_DATA["Deadlift"][1], category: 'Chest' },
-            { name: "Squat", sets: 3, reps: 10, weight: 100, id: 3, image: EXERCISE_DATA["Barbell Squats"][1], category: 'Leg' },
-            { name: "Pull-ups", sets: 3, reps: 10, weight: 100, id: 4, image: EXERCISE_DATA["Pull Ups"][1], category: 'Chest' },
-            { name: "Push-ups", sets: 3, reps: 10, weight: 100, id: 5, image: EXERCISE_DATA["Push Ups"][1], category: 'Back' },
-            { name: "Curls", sets: 3, reps: 10, weight: 100, id: 6, image: EXERCISE_DATA["Bicep Curl"][1], category: 'Abs' },
-            { name: "Dips", sets: 3, reps: 10, weight: 100, id: 7, image: EXERCISE_DATA["Tricep Dips"][1], category: 'Chest' },
-        ]);
-    }, [])
-
     const deleteExercise = (index: number) => {
         setExercises(exercises.filter(exercise => exercise.id !== index));
     }
