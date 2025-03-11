@@ -54,7 +54,7 @@ export default function SignUp() {
       if (startAnimation && index < images.length - 1) {
         timeoutRef.current = setTimeout(() => {
           setIndex(prevIndex => prevIndex + 1);
-        }, 150); 
+        }, 80); 
       } else if (startAnimation && index === images.length - 1) {
         setStartAnimation(false);
       }
@@ -70,7 +70,7 @@ export default function SignUp() {
       if (reverseAnimation && index > 0) {
         timeoutRef.current = setTimeout(() => {
           setIndex(prev => prev - 1);
-        }, 150);
+        }, 80);
       } else if (reverseAnimation && index === 0) {
         setReverseAnimation(false);
       }
@@ -86,7 +86,7 @@ export default function SignUp() {
               <FontAwesome name="close" size={24} color="#fff" />
             </TouchableOpacity>
             <Image source={images[index]} style={styles.logo} />
-            <Text style={styles.title}> CORGFIT </Text>
+            <Text style={styles.title}>CORGFIT</Text>
 
             <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} placeholderTextColor="#888" />
             <TextInput placeholder="Password" style={styles.input} value={passwd} onChangeText={setPasswd} placeholderTextColor="#888" secureTextEntry onFocus={handleFocus} onBlur={handleBlur}/>
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 40,
+    top: 80,
     right: 20,
   },
   logo: {
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 40,
     marginBottom: 30,
+    paddingHorizontal: 10,
     fontFamily: 'PermanentMarker_400Regular'
   },
   input: {
