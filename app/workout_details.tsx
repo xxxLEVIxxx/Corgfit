@@ -25,15 +25,6 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import ExerciseCard from '../components/ExerciseCard';
 import { useExercises } from "./Context";
 
-interface Exercise {
-  id: number;
-  name: string;
-  logged?: string;
-  details?: string;
-  image: any;
-  isLogged: boolean;
-}
-
 export default function WorkoutDetails() {
   const colorScheme = useColorScheme();
   const router = useRouter();
@@ -116,6 +107,7 @@ export default function WorkoutDetails() {
                   onDelete={deleteExercise}
                   swipeableRef={(ref) => (swipeableRefs.current[index] = ref)}
                   index={index}
+                  details={`${item.sets} Sets • ${item.reps} Reps • ${item.weight} lb`}
                   onSwipeableOpen={closeAllSwipeables}
                   onSwipeableWillOpen={closeAllSwipeables}
                   colorScheme={colorScheme === 'light' ? 'light' : 'dark'}
