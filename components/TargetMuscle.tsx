@@ -1,5 +1,5 @@
 import { useExercises } from '@/app/Context';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import { Card, Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -21,21 +21,27 @@ const TargetMuscle = () => {
   // need to add all target muscles
   const categoryImages: { [key: string]: string } = {
     "Back": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+    "Biceps": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+    "Calves": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
     "Chest": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Abs": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Leg": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
+    "Core": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+    "Glutes": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+    "Hamstrings": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+    "Shoulders": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+    "Legs": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+    "Triceps": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
   }
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Target Muscles</Text>
-            <View style={styles.musclesContainer}>
+            <ScrollView style={styles.musclesContainer} horizontal={true} contentContainerStyle={styles.musclesContentContainer}>
                 {targetMuscles.map((muscle) => (
                     <View style={styles.muscle} key={muscle}>
                         <Image source={{uri: categoryImages[muscle]}} style={styles.muscleImage}/>
                         <Text style={styles.muscleText}>{muscle}</Text>
                     </View>
                 ))}
-            </View>
+            </ScrollView>
         </View>
     )
 }
@@ -54,9 +60,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
       },
       musclesContainer: {
+        marginTop: 10
+      },
+      musclesContentContainer: {
         flexDirection: "row",
-        justifyContent: "flex-start",
-        marginTop: 10,
+        justifyContent: "center",
       },
       muscle: {
         alignItems: "center",
