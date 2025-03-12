@@ -56,6 +56,10 @@ export default function RootLayout() {
             />
             <Stack.Screen name="log" options={{ headerShown: false }} />
             <Stack.Screen name="HowToModal" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="exercise_selector"
+              options={{ headerShown: false }}
+            />
           </Stack>
           <StatusBar style="auto" />
         </ThemeProvider>
