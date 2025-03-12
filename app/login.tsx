@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
   Image,
   StyleSheet,
 } from "react-native";
@@ -16,6 +17,7 @@ import { useRouter, useNavigation } from "expo-router";
 
 export default function Login() {
   const [fontsLoaded] = useFonts({ PermanentMarker_400Regular });
+
   const [passwd, setPasswd] = useState("");
   const [email, setEmail] = useState("");
   const [index, setIndex] = useState(0);
@@ -49,7 +51,7 @@ export default function Login() {
     if (startAnimation && index < images.length - 1) {
       timeoutRef.current = setTimeout(() => {
         setIndex((prevIndex) => prevIndex + 1);
-      }, 150);
+      }, 80);
     } else if (startAnimation && index === images.length - 1) {
       setStartAnimation(false);
     }
@@ -65,7 +67,7 @@ export default function Login() {
     if (reverseAnimation && index > 0) {
       timeoutRef.current = setTimeout(() => {
         setIndex((prev) => prev - 1);
-      }, 150);
+      }, 80);
     } else if (reverseAnimation && index === 0) {
       setReverseAnimation(false);
     }
@@ -83,8 +85,9 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
+      
       <Image source={images[index]} style={styles.logo} />
-      <Text style={styles.title}> CORGFIT </Text>
+      {fontsLoaded? (<Text style={styles.title}> CORGFIT</Text>) : (<ActivityIndicator size="large" color="#0000ff"/>)}
 
       <TextInput
         placeholder="Email"
@@ -138,6 +141,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 40,
     marginBottom: 30,
+    paddingHorizontal: 10,
     fontFamily: "PermanentMarker_400Regular",
   },
   input: {
