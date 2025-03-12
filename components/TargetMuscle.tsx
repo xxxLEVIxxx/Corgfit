@@ -2,6 +2,7 @@ import { useExercises } from '@/app/Context';
 import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import { Card, Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { ImageSourcePropType } from 'react-native';
 
 // interface TargetMuscleProps {
 //   targetMuscles: Array<{
@@ -18,18 +19,17 @@ const TargetMuscle = () => {
   const { exercises, setExercises } = useExercises();
   const targetMuscles = [...new Set(exercises.map(e => e.category))];
 
-  // need to add all target muscles
-  const categoryImages: { [key: string]: string } = {
-    "Back": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Biceps": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Calves": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Chest": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Core": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Glutes": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Hamstrings": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Shoulders": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Legs": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
-    "Triceps": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
+  const categoryImages: { [key: string]: ImageSourcePropType } = {
+    "Back": require("@/assets/images/Target_Muscles_Images/back_target.png"),
+    "Biceps": require("@/assets/images/Target_Muscles_Images/bicep_target.png"),
+    "Calves": require("@/assets/images/Target_Muscles_Images/calf_target.png"),
+    "Chest": require("@/assets/images/Target_Muscles_Images/chest_target.png"),
+    "Core": require("@/assets/images/Target_Muscles_Images/core_target.png"),
+    "Glutes": require("@/assets/images/Target_Muscles_Images/glute_target.png"),
+    "Hamstrings": require("@/assets/images/Target_Muscles_Images/hamstring_target.png"),
+    "Shoulders": require("@/assets/images/Target_Muscles_Images/shoulder_target.png"),
+    "Legs": require("@/assets/images/Target_Muscles_Images/leg_target.png"),
+    "Triceps": require("@/assets/images/Target_Muscles_Images/tricep_target.png")
   }
     return (
         <View style={styles.container}>
@@ -37,8 +37,8 @@ const TargetMuscle = () => {
             <ScrollView style={styles.musclesContainer} horizontal={true} contentContainerStyle={styles.musclesContentContainer}>
                 {targetMuscles.map((muscle) => (
                     <View style={styles.muscle} key={muscle}>
-                        <Image source={{uri: categoryImages[muscle]}} style={styles.muscleImage}/>
-                        <Text style={styles.muscleText}>{muscle}</Text>
+                    <Image source={categoryImages[muscle]} style={styles.muscleImage} />
+                    <Text style={styles.muscleText}>{muscle}</Text>
                     </View>
                 ))}
             </ScrollView>

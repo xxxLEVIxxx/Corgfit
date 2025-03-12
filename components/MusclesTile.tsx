@@ -16,11 +16,11 @@ const MusclesTile: React.FC<MusclesProps> = ({ muscles }) => {
       <View style={styles.imageContainer}>
         {/* Replace these with your actual muscle front/back images */}
         <Image
-          source={require('@/assets/images/corgi-1.png')}
+          source={require("@/assets/images/Target_Muscles_Images/chest_target.png")}
           style={styles.muscleImage}
         />
         <Image
-          source={require('@/assets/images/corgi-1.png')}
+          source={require("@/assets/images/Target_Muscles_Images/back_target.png")}
           style={styles.muscleImage}
         />
       </View>
