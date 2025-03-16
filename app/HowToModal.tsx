@@ -8,10 +8,10 @@ import {
   Modal,
   ScrollView,
   Platform,
-  Dimensions,
+  useWindowDimensions,
   Image,
 } from "react-native";
-import { TabView, TabBar } from "react-native-tab-view";
+import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 
 interface HowToModalProps {
   visible: boolean;
@@ -21,10 +21,18 @@ interface HowToModalProps {
 // Instruction Tab Content
 const InstructionTab = () => (
   <ScrollView style={styles.tabContent}>
-    <Text style={styles.text}>1. Adjust the seat and pad to align with your thighs</Text>
-    <Text style={styles.text}>2. Grip the bar with hands slightly wider than shoulder-width</Text>
-    <Text style={styles.text}>3. Pull the bar down to chest level smoothly</Text>
-    <Text style={styles.text}>4. Squeeze shoulder blades and hold for 1-2 seconds</Text>
+    <Text style={styles.text}>
+      1. Adjust the seat and pad to align with your thighs
+    </Text>
+    <Text style={styles.text}>
+      2. Grip the bar with hands slightly wider than shoulder-width
+    </Text>
+    <Text style={styles.text}>
+      3. Pull the bar down to chest level smoothly
+    </Text>
+    <Text style={styles.text}>
+      4. Squeeze shoulder blades and hold for 1-2 seconds
+    </Text>
   </ScrollView>
 );
 
@@ -44,8 +52,15 @@ const EquipmentTab = () => (
   </ScrollView>
 );
 
+// Define scenes using SceneMap
+const renderScene = SceneMap({
+  instruction: InstructionTab,
+  target: TargetTab,
+  equipment: EquipmentTab,
+});
+
 const HowToModal: React.FC<HowToModalProps> = ({ visible, onClose }) => {
-  const [index, setIndex] = useState<number>(0);
+  const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: "instruction", title: "Instruction" },
     { key: "target", title: "Target" },
@@ -53,32 +68,21 @@ const HowToModal: React.FC<HowToModalProps> = ({ visible, onClose }) => {
   ]);
 
   const router = useRouter();
-
-  // ✅ Corrected `renderScene` function
-  const renderScene = ({ route }) => {
-    console.log("Rendering Tab:", route.key); // Debugging
-    switch (route.key) {
-      case "instruction":
-        return <InstructionTab />;
-      case "target":
-        return <TargetTab />;
-      case "equipment":
-        return <EquipmentTab />;
-      default:
-        return null;
-    }
-  };
+  const layout = useWindowDimensions();
 
   return (
     <Modal visible={visible} animationType="slide" transparent={false}>
       <View style={styles.modalContainer}>
         {/* Close Button */}
-        <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => router.back()}
+        >
           <Text style={styles.closeText}>✖</Text>
         </TouchableOpacity>
 
         {/* Embedded Video Placeholder (Change if using WebView) */}
-        <View style={styles.videoContainer}>
+        <View style={styles.gifContainer}>
           <Image
             source={require("@/assets/images/How-To-Images/Back_HT_Pull_Ups.png")}
             style={{ width: "100%", height: 200 }}
@@ -91,17 +95,13 @@ const HowToModal: React.FC<HowToModalProps> = ({ visible, onClose }) => {
         {/* Tab View */}
         <TabView
           navigationState={{ index, routes }}
-          renderScene={renderScene} // ✅ Fixed rendering
+          renderScene={renderScene}
           onIndexChange={setIndex}
-          initialLayout={{
-            width: Dimensions.get("window").width,
-            height: Platform.OS === "ios" ? Dimensions.get("window").height : 0,
-          }}
+          initialLayout={{ width: layout.width }}
           renderTabBar={(props) => (
             <TabBar
               {...props}
               style={styles.tabBar}
-              labelStyle={styles.tabLabel}
               indicatorStyle={styles.indicator}
               activeColor="#fff"
               inactiveColor="#aaa"
@@ -141,14 +141,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     marginVertical: 20,
     textAlign: "center",
-  },
-  videoContainer: {
-    width: "100%",
-    height: 200,
-    backgroundColor: "#000", // Placeholder background
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
   },
   tabView: {
     flex: 1,
@@ -191,12 +183,20 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  gifContainer: {
+    width: "100%",
+    height: 200,
+    backgroundColor: "#000", // Placeholder background
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+  },
   indicator: {
     backgroundColor: "orange",
     height: 3,
   },
   tabContent: {
-    flex: 1, // Ensures proper spacing
+    flex: 1,
     padding: 15,
     backgroundColor: "#1a1a1a",
   },
