@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
-
 import {
   View,
   Text,
@@ -10,32 +9,26 @@ import {
   ScrollView,
   Platform,
   Dimensions,
+  Image,
 } from "react-native";
-import { TabView, TabBar, SceneMap } from "react-native-tab-view";
-import { WebView } from "react-native-webview";
+import { TabView, TabBar } from "react-native-tab-view";
 
 interface HowToModalProps {
   visible: boolean;
   onClose: () => void;
 }
 
+// Instruction Tab Content
 const InstructionTab = () => (
   <ScrollView style={styles.tabContent}>
-    <Text style={styles.text}>
-      1. Adjust the seat and pad to align with your thighs
-    </Text>
-    <Text style={styles.text}>
-      2. Grip the bar with hands slightly wider than shoulder-width
-    </Text>
-    <Text style={styles.text}>
-      3. Pull the bar down to chest level smoothly
-    </Text>
-    <Text style={styles.text}>
-      4. Squeeze shoulder blades and hold for 1-2 seconds
-    </Text>
+    <Text style={styles.text}>1. Adjust the seat and pad to align with your thighs</Text>
+    <Text style={styles.text}>2. Grip the bar with hands slightly wider than shoulder-width</Text>
+    <Text style={styles.text}>3. Pull the bar down to chest level smoothly</Text>
+    <Text style={styles.text}>4. Squeeze shoulder blades and hold for 1-2 seconds</Text>
   </ScrollView>
 );
 
+// Target Tab Content
 const TargetTab = () => (
   <ScrollView style={styles.tabContent}>
     <Text style={styles.text}>Primary: Latissimus Dorsi (Lats)</Text>
@@ -43,6 +36,7 @@ const TargetTab = () => (
   </ScrollView>
 );
 
+// Equipment Tab Content
 const EquipmentTab = () => (
   <ScrollView style={styles.tabContent}>
     <Text style={styles.text}>Lat Pulldown Machine</Text>
@@ -58,56 +52,65 @@ const HowToModal: React.FC<HowToModalProps> = ({ visible, onClose }) => {
     { key: "equipment", title: "Equipment" },
   ]);
 
-  const renderScene = SceneMap({
-    instruction: InstructionTab,
-    target: TargetTab,
-    equipment: EquipmentTab,
-  });
-
   const router = useRouter();
 
-  return (
-    <View style={styles.modalContainer}>
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={() => router.back()}
-      >
-        <Text style={styles.closeText}>✖</Text>
-      </TouchableOpacity>
+  // ✅ Corrected `renderScene` function
+  const renderScene = ({ route }) => {
+    console.log("Rendering Tab:", route.key); // Debugging
+    switch (route.key) {
+      case "instruction":
+        return <InstructionTab />;
+      case "target":
+        return <TargetTab />;
+      case "equipment":
+        return <EquipmentTab />;
+      default:
+        return null;
+    }
+  };
 
-      {/* Embedded YouTube Video */}
-      <View style={styles.videoContainer}>
-        <WebView
-          source={{
-            uri: "https://www.youtube.com/embed/NMfBdEV03j8?autoplay=1&playsinline=1&mute=1",
+  return (
+    <Modal visible={visible} animationType="slide" transparent={false}>
+      <View style={styles.modalContainer}>
+        {/* Close Button */}
+        <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
+          <Text style={styles.closeText}>✖</Text>
+        </TouchableOpacity>
+
+        {/* Embedded Video Placeholder (Change if using WebView) */}
+        <View style={styles.videoContainer}>
+          <Image
+            source={require("@/assets/images/How-To-Images/Back_HT_Pull_Ups.png")}
+            style={{ width: "100%", height: 200 }}
+          />
+        </View>
+
+        {/* Exercise Title */}
+        <Text style={styles.title}>Lat Pulldown</Text>
+
+        {/* Tab View */}
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene} // ✅ Fixed rendering
+          onIndexChange={setIndex}
+          initialLayout={{
+            width: Dimensions.get("window").width,
+            height: Platform.OS === "ios" ? Dimensions.get("window").height : 0,
           }}
-          style={{ width: "100%", height: 315 }}
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-          allowsInlineMediaPlayback={true} // Required for autoplay on iOS
-          allowsFullscreenVideo={true} // Allows fullscreen playback
+          renderTabBar={(props) => (
+            <TabBar
+              {...props}
+              style={styles.tabBar}
+              labelStyle={styles.tabLabel}
+              indicatorStyle={styles.indicator}
+              activeColor="#fff"
+              inactiveColor="#aaa"
+            />
+          )}
+          style={styles.tabView}
         />
       </View>
-      <Text style={styles.title}>Lat Pulldown</Text>
-
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        onIndexChange={setIndex}
-        initialLayout={{ width: Dimensions.get("window").width }}
-        renderTabBar={(props) => (
-          <TabBar
-            {...props}
-            style={styles.tabBar}
-            labelStyle={styles.tabLabel}
-            indicatorStyle={styles.indicator}
-            activeColor="#fff"
-            inactiveColor="#aaa"
-          />
-        )}
-        style={styles.tabView}
-      />
-    </View>
+    </Modal>
   );
 };
 
@@ -117,12 +120,12 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: "#1a1a1a",
-    paddingTop: Platform.OS === "ios" ? 50 : 40,
+    paddingTop: Platform.OS === "ios" ? 95 : 40,
     paddingHorizontal: 10,
   },
   closeButton: {
     position: "absolute",
-    top: Platform.OS === "ios" ? 30 : 20,
+    top: Platform.OS === "ios" ? 50 : 20,
     right: 20,
     zIndex: 10,
     padding: 5,
@@ -132,41 +135,68 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
-  videoContainer: {
-    width: "100%",
-    height: 200,
-    borderRadius: 10,
-    backgroundColor: "#000",
-    overflow: "hidden",
-    marginBottom: 15,
-  },
-  video: {
-    width: "100%",
-    height: "100%",
-  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#fff",
-    marginVertical: 10,
+    marginVertical: 20,
     textAlign: "center",
+  },
+  videoContainer: {
+    width: "100%",
+    height: 200,
+    backgroundColor: "#000", // Placeholder background
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
   },
   tabView: {
     flex: 1,
+    ...Platform.select({
+      ios: {
+        marginTop: 5,
+      },
+      web: {
+        marginTop: 0,
+      },
+    }),
   },
   tabBar: {
     backgroundColor: "#333",
     elevation: 2,
+    ...Platform.select({
+      ios: {
+        height: 50,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: -1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        paddingBottom: 0,
+      },
+      web: {
+        height: 48,
+      },
+    }),
   },
   tabLabel: {
     fontSize: 16,
     fontWeight: "600",
+    ...Platform.select({
+      ios: {
+        padding: 8,
+        margin: 0,
+      },
+      web: {
+        margin: 8,
+      },
+    }),
   },
   indicator: {
-    backgroundColor: "#fff",
+    backgroundColor: "orange",
     height: 3,
   },
   tabContent: {
+    flex: 1, // Ensures proper spacing
     padding: 15,
     backgroundColor: "#1a1a1a",
   },
