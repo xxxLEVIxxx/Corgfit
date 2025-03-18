@@ -24,7 +24,9 @@ export default function SignUp() {
       if (passwd !== confirm) {
         setCorrect(false);
       } else {
-        router.back();
+
+        // router.back();
+        router.replace('/survey')
       }
     }
 
