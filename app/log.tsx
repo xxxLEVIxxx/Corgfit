@@ -24,6 +24,9 @@ export default function Log() {
   const exerciseId = parseInt(params.exerciseId as string);
   const { exercises, setExercises } = useExercises();
   
+  // Get the current exercise
+  const currentExercise = exercises.find(ex => ex.id === exerciseId);
+  
   const [HowToModalVisible, setHowToModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentSet, setCurrentSet] = useState(1);
@@ -45,25 +48,55 @@ export default function Log() {
 
   // Handle set data from LogForm
   const handleSetData = (reps: number, weight: number) => {
-    setLoggedSets(prev => [...prev, { setNumber: currentSet, reps, weight }]);
+    console.log('handleSetData called with:', { reps, weight, currentSet });
+    setLoggedSets(prev => {
+      // Update the current set if it exists, or add a new one
+      const existingSetIndex = prev.findIndex(set => set.setNumber === currentSet);
+      if (existingSetIndex >= 0) {
+        const newSets = [...prev];
+        newSets[existingSetIndex] = { setNumber: currentSet, reps, weight };
+        console.log('Updated existing set:', newSets);
+        return newSets;
+      } else {
+        const newSets = [...prev, { setNumber: currentSet, reps, weight }];
+        console.log('Added new set:', newSets);
+        return newSets;
+      }
+    });
   };
 
   // Log workout
   const handleLogWorkout = () => {
+    console.log('Current logged sets:', loggedSets);
+    console.log('Current set:', currentSet);
+    console.log('Max sets:', maxSets);
+    
+    // Make sure the current set is logged before continuing
+    const currentSetLogged = loggedSets.some(set => set.setNumber === currentSet);
+    
+    // If not logged yet, create a set with default values instead of calling handleSetData
+    const updatedLoggedSets = currentSetLogged
+      ? loggedSets
+      : [...loggedSets, { setNumber: currentSet, reps: 4, weight: 40 }];
+    
     // Update the exercise's logged status in the context
-    setExercises(currentExercises => 
-      currentExercises.map(exercise => {
+    setExercises(currentExercises => {
+      const updatedExercises = currentExercises.map(exercise => {
         if (exercise.id === exerciseId) {
+          console.log('Updating exercise:', exercise.name);
+          console.log('With logged sets:', updatedLoggedSets);
           return {
             ...exercise,
             isLogged: true,
             logged: `${currentSet}/${maxSets} Sets Logged`,
-            loggedSets: [...loggedSets, { setNumber: currentSet, reps: exercise.reps, weight: exercise.weight }]
+            loggedSets: updatedLoggedSets
           };
         }
         return exercise;
-      })
-    );
+      });
+      console.log('Updated exercises:', updatedExercises);
+      return updatedExercises;
+    });
 
     // Continue with set progression or return
     if (currentSet < maxSets) {

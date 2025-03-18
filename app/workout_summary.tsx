@@ -9,46 +9,62 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import WorkoutSummaryExerciseItem from "@/components/WorkoutSummaryExerciseItem";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useExercises } from "./Context";
+import { ImageSourcePropType } from "react-native";
 
 export default function WorkoutSummary() {
   const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
   const router = useRouter();
+  const { exercises } = useExercises();
   
-  // Mock data for the workout summary
+  // Get today's date in the format "Jan 1, 2024"
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
+  // Filter only logged exercises
+  const loggedExercises = exercises.filter(exercise => exercise.isLogged);
+  
+  // Get all unique muscle groups from logged exercises
+  const muscleGroups = [...new Set(loggedExercises.map(exercise => exercise.category))];
+  
+  // Join muscle groups with comma for display
+  const muscleGroupDisplay = muscleGroups.join(', ');
+  
+  // Mapping of muscle groups to their images
+  const categoryImages: { [key: string]: ImageSourcePropType } = {
+    "Back": require("@/assets/images/Target_Muscles_Images/back_target.png"),
+    "Biceps": require("@/assets/images/Target_Muscles_Images/bicep_target.png"),
+    "Calves": require("@/assets/images/Target_Muscles_Images/calf_target.png"),
+    "Chest": require("@/assets/images/Target_Muscles_Images/chest_target.png"),
+    "Core": require("@/assets/images/Target_Muscles_Images/core_target.png"),
+    "Glutes": require("@/assets/images/Target_Muscles_Images/glute_target.png"),
+    "Hamstrings": require("@/assets/images/Target_Muscles_Images/hamstring_target.png"),
+    "Shoulders": require("@/assets/images/Target_Muscles_Images/shoulder_target.png"),
+    "Legs": require("@/assets/images/Target_Muscles_Images/leg_target.png"),
+    "Triceps": require("@/assets/images/Target_Muscles_Images/tricep_target.png")
+  };
+
+  // Format exercises for display
+  const formattedExercises = loggedExercises.map(exercise => ({
+    id: exercise.id.toString(),
+    name: exercise.name,
+    sets: exercise.loggedSets || [],
+    isPR: false, // We can implement PR detection later
+    image: exercise.image
+  }));
+
+  // Calculate workout stats
   const workoutData = {
-    date: "Jan 1, 1970",
-    muscleGroup: "Back",
-    calories: "107 kcal",
-    prs: 1,
-    exercises: [
-      {
-        id: "1",
-        name: "Lat Pulldown",
-        sets: [
-          { reps: 10, weight: 50, unit: "lbs" },
-          { reps: 10, weight: 70, unit: "lbs" },
-          { reps: 10, weight: 65, unit: "lbs" },
-          { reps: 10, weight: 50, unit: "lbs" },
-        ],
-        isPR: false,
-        image: require("@/assets/images/Lat_Pulldown.png")
-      },
-      {
-        id: "2",
-        name: "Seated Cable Row",
-        sets: [
-          { reps: 10, weight: 20, unit: "lbs" },
-          { reps: 10, weight: 30, unit: "lbs" },
-          { reps: 10, weight: 35, unit: "lbs" },
-          { reps: 10, weight: 40, unit: "lbs" },
-          { reps: 10, weight: 45, unit: "lbs" },
-          { reps: 10, weight: 50, unit: "lbs" },
-        ],
-        isPR: true,
-        image: require("@/assets/images/Barbell_Rows.png")
-      }
-    ]
+    date: formattedDate,
+    muscleGroup: muscleGroupDisplay || "Workout",
+    calories: "107 kcal", // This could be calculated based on the exercises
+    prs: 0, // This could be determined by comparing with previous workouts
+    exercises: formattedExercises
   };
 
   const handleDone = () => {
@@ -71,15 +87,27 @@ export default function WorkoutSummary() {
             <ThemedText style={styles.headerDate}>{workoutData.date}</ThemedText>
           </View>
           
-          {/* Muscle Group Icon */}
+          {/* Muscle Groups Icons Carousel */}
           <View style={styles.muscleGroupContainer}>
-            <View style={styles.muscleIconContainer}>
-              <Image 
-                source={require("@/assets/images/react-logo.png")} 
-                style={styles.muscleIcon} 
-                resizeMode="contain"
-              />
-            </View>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.muscleGroupScrollContent}
+            >
+              {muscleGroups.map((muscleGroup, index) => (
+                <View key={index} style={styles.muscleIconWrapper}>
+                  <View style={styles.muscleIconContainer}>
+                    <Image 
+                      source={categoryImages[muscleGroup]} 
+                      style={styles.muscleIcon} 
+                      resizeMode="contain"
+                    />
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+            
+            {/* Muscle Group Text Display */}
             <ThemedText style={styles.muscleGroupText}>{workoutData.muscleGroup}</ThemedText>
           </View>
           
@@ -100,12 +128,12 @@ export default function WorkoutSummary() {
           
           {/* Exercise Count */}
           <ThemedText style={styles.exerciseCount}>
-            {workoutData.exercises.length} exercise{workoutData.exercises.length !== 1 ? 's' : ''}
+            {formattedExercises.length} exercise{formattedExercises.length !== 1 ? 's' : ''}
           </ThemedText>
           
           {/* Exercise List */}
           <View style={styles.exerciseList}>
-            {workoutData.exercises.map((exercise) => (
+            {formattedExercises.map((exercise) => (
               <WorkoutSummaryExerciseItem 
                 key={exercise.id}
                 exercise={exercise}
@@ -156,23 +184,33 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 35,
   },
+  muscleGroupScrollContent: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  muscleIconWrapper: {
+    alignItems: "center",
+    marginHorizontal: 15,
+  },
   muscleIconContainer: {
-    width: 110,
-    height: 110,
-    borderRadius: 55,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     backgroundColor: "#333",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 10,
   },
   muscleIcon: {
-    width: 70,
-    height: 70,
-    tintColor: "#FF4D4D",
+    width: 50,
+    height: 50,
   },
   muscleGroupText: {
     fontSize: 24,
     fontWeight: "bold",
+    marginTop: 15,
+    textAlign: "center",
   },
   statsContainer: {
     flexDirection: "row",
