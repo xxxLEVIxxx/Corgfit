@@ -1,4 +1,3 @@
-import { color } from "highcharts";
 import {
   Pressable,
   StyleSheet,
@@ -6,26 +5,34 @@ import {
   View,
   Modal,
   Image,
-  Button,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { LogForm } from "@/components/LogForm";
-import { CloseButton } from "react-bootstrap";
-
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { EXERCISE_DATA } from "./Context";
+import { useExercises } from "./Context";
 
 export default function Log() {
   const router = useRouter();
+  const params = useLocalSearchParams();
+  const exerciseName = params.exerciseName as string;
+  const exerciseId = parseInt(params.exerciseId as string);
+  const { exercises, setExercises } = useExercises();
+  
   const [HowToModalVisible, setHowToModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentSet, setCurrentSet] = useState(1);
   const [maxSets, setMaxSets] = useState<number>(3);
+  const [loggedSets, setLoggedSets] = useState<Array<{ setNumber: number; reps: number; weight: number }>>([]);
   const scrollRef = useRef<ScrollView>(null);
+
+  // Get the exercise image from EXERCISE_DATA
+  const exerciseImage = exerciseName ? EXERCISE_DATA[exerciseName][2] : require("@/assets/images/benchpress.png");
 
   // Scroll to the bottom of the modal when it is opened
   useEffect(() => {
@@ -36,9 +43,29 @@ export default function Log() {
     }
   }, [modalVisible]);
 
+  // Handle set data from LogForm
+  const handleSetData = (reps: number, weight: number) => {
+    setLoggedSets(prev => [...prev, { setNumber: currentSet, reps, weight }]);
+  };
+
   // Log workout
   const handleLogWorkout = () => {
-    // Log workout
+    // Update the exercise's logged status in the context
+    setExercises(currentExercises => 
+      currentExercises.map(exercise => {
+        if (exercise.id === exerciseId) {
+          return {
+            ...exercise,
+            isLogged: true,
+            logged: `${currentSet}/${maxSets} Sets Logged`,
+            loggedSets: [...loggedSets, { setNumber: currentSet, reps: exercise.reps, weight: exercise.weight }]
+          };
+        }
+        return exercise;
+      })
+    );
+
+    // Continue with set progression or return
     if (currentSet < maxSets) {
       setCurrentSet(currentSet + 1);
     } else {
@@ -74,11 +101,11 @@ export default function Log() {
       >
         <View style={styles.modal}>
           <Image
-            source={require("@/assets/images/benchpress.png")}
+            source={exerciseImage}
             style={styles.image}
-          ></Image>
+          />
           <View style={styles.row}>
-            <Text style={styles.title}>Bench Press</Text>
+            <Text style={styles.title}>{exerciseName || "Exercise"}</Text>
             <Pressable
               style={styles.howto}
               onPress={() => router.push("/HowToModal")}
@@ -94,16 +121,13 @@ export default function Log() {
             </Text>
           </View>
 
-          <View
-            style={styles.separator}
-            lightColor="#eee"
-            darkColor="rgba(255,255,255,0.1)"
-          />
+          <View style={styles.separator} />
           <LogForm
             currentSet={currentSet}
             onDelete={minusCurrentSet}
             updateMaxSets={setMaxSets}
             scrollRef={scrollRef}
+            onSetLogged={handleSetData}
           />
           <Pressable style={styles.closeButton} onPress={() => router.back()}>
             <MaterialIcons name="close" size={24} color="black" />
@@ -113,13 +137,12 @@ export default function Log() {
 
       {/* this is a button that logs the workout */}
       <View style={styles.bottom}>
-        <View style={styles.log_button}>
-          <Button
-            title="Log Workout"
-            color={"white"}
-            onPress={handleLogWorkout}
-          />
-        </View>
+        <Pressable 
+          style={styles.log_button}
+          onPress={handleLogWorkout}
+        >
+          <Text style={styles.log_button_text}>Log Workout</Text>
+        </Pressable>
       </View>
     </KeyboardAvoidingView>
   );
@@ -226,11 +249,17 @@ const styles = StyleSheet.create({
     bottom: 20,
     height: 40,
     width: 180,
-    textAlign: "center",
     backgroundColor: "green",
     borderRadius: 10,
     marginBottom: 10,
     alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  log_button_text: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   bottom: {
     position: "absolute",
