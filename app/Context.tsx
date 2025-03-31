@@ -11,6 +11,11 @@ export interface Exercise {
   category: string;
   logged?: string;
   isLogged?: boolean;
+  loggedSets?: Array<{
+    setNumber: number;
+    reps: number;
+    weight: number;
+  }>;
 }
 
 // Dictionary mapping exercise names to [muscle_group, list_image_path, how_to_image_path]

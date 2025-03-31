@@ -30,21 +30,21 @@ export default function WorkoutDetails() {
   const router = useRouter();
   const { exercises, setExercises } = useExercises();
 
-  // Set initial logged exercises, 0 and 4 as an example
-  useEffect(() => {
-    setExercises(currentExercises => 
-      currentExercises.map((exercise, index) => {
-        if (index === 0 || index === 4) {
-          return {
-            ...exercise,
-            isLogged: true,
-            logged: '3/3 Sets Logged'
-          };
-        }
-        return exercise;
-      })
-    );
-  }, []);
+// // Set initial logged exercises, 0 and 4 as an example
+// useEffect(() => {
+//   setExercises(currentExercises => 
+//     currentExercises.map((exercise, index) => {
+//       if (index === 0 || index === 4) {
+//         return {
+//           ...exercise,
+//           isLogged: true,
+//           logged: '3/3 Sets Logged'
+//         };
+//       }
+//       return exercise;
+//     })
+//   );
+// }, []);
 
   const dynamicStyles = {
     container: {
@@ -100,7 +100,15 @@ export default function WorkoutDetails() {
             contentContainerStyle={styles.listContent}
             style={styles.list}
             renderItem={({ item, index }) => (
-              <TouchableOpacity onPress={() => {router.push('/log')}}>
+              <TouchableOpacity onPress={() => {
+                router.push({
+                  pathname: '/log',
+                  params: {
+                    exerciseName: item.name,
+                    exerciseId: item.id
+                  }
+                });
+              }}>
                 <ExerciseCard
                   {...item}
                   isLogged={item.isLogged || false}
@@ -121,7 +129,7 @@ export default function WorkoutDetails() {
             style={styles.closeButton}
             onPress={() => router.replace("/workout_summary")}
           >
-            <Ionicons name="close" size={24} color="white" />
+            <Ionicons name="square" size={24} color="white" />
           </TouchableOpacity>
         </ThemedView>
       </GestureHandlerRootView>

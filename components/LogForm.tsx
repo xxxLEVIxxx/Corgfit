@@ -2,7 +2,7 @@
 import { View, StyleSheet, Button, TextInput, ScrollView } from "react-native";
 import Svg, { Polygon, Text as SvgText } from "react-native-svg";
 import { useEffect, useState } from "react";
-import { LogRow } from "./LogRow.tsx";
+import { LogRow } from "./LogRow";
 import React from "react";
 
 interface LogFormProps {
@@ -10,6 +10,7 @@ interface LogFormProps {
   onDelete: () => void;
   updateMaxSets: (sets: number) => void;
   scrollRef: React.RefObject<ScrollView>;
+  onSetLogged: (reps: number, weight: number) => void;
 }
 
 export function LogForm({
@@ -17,6 +18,7 @@ export function LogForm({
   onDelete,
   updateMaxSets,
   scrollRef,
+  onSetLogged,
 }: LogFormProps) {
   const [sets, setSets] = useState(3);
   const rows = [];
@@ -25,7 +27,7 @@ export function LogForm({
     rows.push(
       <React.Fragment key={i}>
         <View style={styles.line}></View>
-        <LogRow index={i} isFocused={i === currentSet} />
+        <LogRow index={i} isFocused={i === currentSet} onSetData={onSetLogged} />
       </React.Fragment>
     );
   }
@@ -58,7 +60,7 @@ export function LogForm({
       <View style={styles.row}></View>
 
       {/* this is the first row of the log form */}
-      <LogRow index={1} isFocused={1 === currentSet} key={1} />
+      <LogRow index={1} isFocused={1 === currentSet} key={1} onSetData={onSetLogged} />
 
       {/* this is a loop that creates the rows for the log form */}
       {rows}

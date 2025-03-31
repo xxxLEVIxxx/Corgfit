@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, TextInput, StyleSheet, Text } from "react-native";
 import Svg, { Polygon, Text as SvgText } from "react-native-svg";
 import React from "react";
@@ -6,22 +6,46 @@ import React from "react";
 interface LogRowProps {
   index: number;
   isFocused: boolean;
+  onSetData: (reps: number, weight: number) => void;
 }
 
-export function LogRow({ index, isFocused }: LogRowProps) {
+export function LogRow({ index, isFocused, onSetData }: LogRowProps) {
   const [reps, setReps] = useState(4);
   const [weight, setWeight] = useState(40);
 
+  // Call onSetData with values whenever this row is focused or values change
+  useEffect(() => {
+    if (isFocused) {
+      onSetData(reps, weight);
+    }
+  // Remove onSetData from dependency array to prevent infinite loops
+  }, [isFocused, reps, weight, index]);
+
+  // Call onSetData with initial values when component mounts
+  useEffect(() => {
+    // Only for the first row, set initial values
+    if (index === 1) {
+      onSetData(reps, weight);
+    }
+  // Use an empty dependency array to ensure this only runs once on mount
+  }, []);
+
   // this is a function that handles the reps change
   const handleRepsChange = (text: string) => {
-    const newReps = parseInt(text) || 0;
-    setReps(newReps);
+    // Only update if text isn't empty
+    if (text !== '') {
+      const newReps = parseInt(text) || 0;
+      setReps(newReps);
+    }
   };
 
   // this is a function that handles the weight change
   const handleWeightChange = (text: string) => {
-    const newWeight = parseInt(text) || 0;
-    setWeight(newWeight);
+    // Only update if text isn't empty
+    if (text !== '') {
+      const newWeight = parseInt(text) || 0;
+      setWeight(newWeight);
+    }
   };
 
   return (
@@ -37,13 +61,21 @@ export function LogRow({ index, isFocused }: LogRowProps) {
       </Svg>
       <TextInput
         style={isFocused ? styles.focused_input : styles.unfocused_input}
-        onBlur={(e) => handleRepsChange(e.nativeEvent.text)}
-        defaultValue={reps.toString()}
+        onChangeText={handleRepsChange}
+        value={reps.toString()}
+        keyboardType="numeric"
+        placeholder="0"
+        placeholderTextColor="#666"
+        selectTextOnFocus={true}
       />
       <TextInput
         style={isFocused ? styles.focused_input : styles.unfocused_input}
-        onBlur={(e) => handleWeightChange(e.nativeEvent.text)}
-        defaultValue={weight.toString()}
+        onChangeText={handleWeightChange}
+        value={weight.toString()}
+        keyboardType="numeric"
+        placeholder="0"
+        placeholderTextColor="#666"
+        selectTextOnFocus={true}
       />
 
       {isFocused && (

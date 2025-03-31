@@ -4,9 +4,9 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 
 interface Set {
+  setNumber: number;
   reps: number;
   weight: number;
-  unit: string;
 }
 
 interface Exercise {
@@ -54,12 +54,13 @@ const WorkoutSummaryExerciseItem = ({ exercise }: WorkoutSummaryExerciseItemProp
             )}
           </View>
           
+          {/* Sets Container - Display columns side by side */}
           <View style={styles.setsOuterContainer}>
             {/* First column of sets - always show up to 3 sets */}
             <View style={styles.setsContainer}>
               {firstColumn.map((set, index) => (
                 <ThemedText key={`first-${index}`} style={styles.setInfo}>
-                  {set.reps} × {set.weight} {set.unit}
+                  {set.reps} × {set.weight} lb
                 </ThemedText>
               ))}
               
@@ -71,10 +72,10 @@ const WorkoutSummaryExerciseItem = ({ exercise }: WorkoutSummaryExerciseItemProp
             
             {/* Second column of sets if more than 3 sets */}
             {secondColumn.length > 0 && (
-              <View style={[styles.setsContainer, styles.secondColumn]}>
+              <View style={styles.setsContainer}>
                 {secondColumn.map((set, index) => (
                   <ThemedText key={`second-${index}`} style={styles.setInfo}>
-                    {set.reps} × {set.weight} {set.unit}
+                    {set.reps} × {set.weight} lb
                   </ThemedText>
                 ))}
               </View>
@@ -128,14 +129,12 @@ const styles = StyleSheet.create({
   },
   setsOuterContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
+    justifyContent: "flex-start",
   },
   setsContainer: {
     flexDirection: "column",
     minWidth: 100,
-  },
-  secondColumn: {
-    marginLeft: 20,
+    marginRight: 20,
   },
   setInfo: {
     fontSize: 14,
