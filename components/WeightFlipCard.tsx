@@ -105,7 +105,7 @@ export default function WeightFlipCard({
         ]}
       >
         <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>Current Weight</Text>
+          <Text style={styles.cardTitle}>Current{"\n"}Weight</Text>
           <View style={styles.weightValueContainer}>
             <Text style={styles.weightValue}>{currentWeight}</Text>
             <Text style={styles.weightUnit}>lbs</Text>
@@ -181,13 +181,12 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
   },
   card: {
-    width: 160,
-    height: 160,
-    borderRadius: 16,
-    padding: 20,
+    width: 150,
+    height: 143,
+    borderRadius: 10,
+    padding: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -213,7 +212,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "white",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   weightValueContainer: {
     flexDirection: "row",
@@ -260,12 +259,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: "white",
-    marginBottom: 12,
+    marginBottom: 8,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 6,
   },
   weightInputWrapper: {
     flex: 1,
@@ -276,7 +275,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: "#F9F9FB",
     paddingHorizontal: 8,
-    height: 48,
+    height: 32,
   },
   weightInput: {
     flex: 1,

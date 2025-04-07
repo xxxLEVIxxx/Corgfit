@@ -1,24 +1,24 @@
-import React from 'react';
-import { StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { format } from 'date-fns';
-import { FontAwesome } from '@expo/vector-icons';
-import CorgiImage from '@/assets/images/og-corgi-fit.svg';
+import React from "react";
+import { StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { format } from "date-fns";
+import { FontAwesome } from "@expo/vector-icons";
+import CorgiImage from "@/assets/images/og-corgi-fit.svg";
 
-import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from '@/components/ThemedText';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function ProfileScreen() {
   const colorScheme = useColorScheme();
 
   const dynamicStyles = {
     logoutButtonContainer: {
-      borderTopWidth: colorScheme === 'dark' ? 0 : 1, 
-      borderTopColor: Colors[colorScheme ?? 'light'].tabIconDefault,
+      borderTopWidth: colorScheme === "dark" ? 0 : 1,
+      borderTopColor: Colors[colorScheme ?? "light"].tabIconDefault,
     },
   };
-  
+
   // Mock user data - in a real app, this would come from your auth/user context
   const user = {
     name: "John Doe",
@@ -31,7 +31,7 @@ export default function ProfileScreen() {
       postsCount: 42,
       followersCount: 128,
       followingCount: 97,
-    }
+    },
   };
 
   return (
@@ -39,15 +39,11 @@ export default function ProfileScreen() {
       {/* Profile Header */}
       <ThemedView style={styles.header}>
         <ThemedView style={styles.profileImageContainer}>
-          <CorgiImage 
-            width={100} 
-            height={100}
-            style={styles.profileImage}
-          />
+          <CorgiImage width={100} height={100} style={styles.profileImage} />
         </ThemedView>
         <ThemedText style={styles.name}>{user.name}</ThemedText>
         <ThemedText style={styles.memberSince}>
-          Member since {format(user.memberSince, 'MMMM yyyy')}
+          Member since {format(user.memberSince, "MMMM yyyy")}
         </ThemedText>
       </ThemedView>
 
@@ -60,7 +56,9 @@ export default function ProfileScreen() {
               <FontAwesome name="user" size={20} color="#007AFF" />
               <ThemedView style={styles.menuTextContainer}>
                 <ThemedText style={styles.menuText}>Edit Profile</ThemedText>
-                <ThemedText style={styles.menuSubtext}>Photo, name, height, sex, location, email</ThemedText>
+                <ThemedText style={styles.menuSubtext}>
+                  Photo, name, height, sex, location, email
+                </ThemedText>
               </ThemedView>
               <FontAwesome name="chevron-right" size={16} color="#C7C7CC" />
             </ThemedView>
@@ -88,7 +86,9 @@ export default function ProfileScreen() {
       {/* Download Reports Section */}
       <ThemedView style={styles.section}>
         <ThemedView style={styles.sectionHeader}>
-          <ThemedText style={styles.sectionTitle}>Download Your Information</ThemedText>
+          <ThemedText style={styles.sectionTitle}>
+            Download Your Information
+          </ThemedText>
         </ThemedView>
         <TouchableOpacity style={styles.menuItem}>
           <ThemedView style={styles.menuItemContent}>
@@ -117,7 +117,9 @@ export default function ProfileScreen() {
             <FontAwesome name="question-circle" size={20} color="#007AFF" />
             <ThemedView style={styles.menuTextContainer}>
               <ThemedText style={styles.menuText}>Contact Support</ThemedText>
-              <ThemedText style={styles.menuSubtext}>help@corgfit.com</ThemedText>
+              <ThemedText style={styles.menuSubtext}>
+                help@corgfit.com
+              </ThemedText>
             </ThemedView>
             <FontAwesome name="chevron-right" size={16} color="#C7C7CC" />
           </ThemedView>
@@ -141,36 +143,39 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#212529",
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: 30,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 15,
     elevation: 2,
+    backgroundColor: "#343A40",
   },
   profileImageContainer: {
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 15,
     elevation: 5,
+    backgroundColor: "#343A40",
   },
   profileImage: {
     width: 100,
     height: 100,
     borderRadius: 50,
     borderWidth: 3,
-    borderColor: '#fff',
+    borderColor: "#fff",
   },
   name: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: "600",
     marginTop: 12,
   },
   memberSince: {
@@ -179,52 +184,58 @@ const styles = StyleSheet.create({
   },
   section: {
     borderRadius: 16,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginHorizontal: 16,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 15,
     elevation: 2,
+    backgroundColor: "#343A40",
   },
   menuItem: {
     paddingVertical: 16,
     paddingHorizontal: 20,
+    backgroundColor: "#343A40",
   },
   menuItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#343A40",
   },
   menuTextContainer: {
     flex: 1,
     marginLeft: 15,
+    backgroundColor: "#343A40",
   },
   menuText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   menuSubtext: {
     fontSize: 14,
     marginTop: 2,
   },
   logoutButton: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 16,
     paddingHorizontal: 20,
+    backgroundColor: "#343A40",
   },
   logoutText: {
-    color: '#FF3B30',
+    color: "#FF3B30",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   sectionHeader: {
     padding: 16,
     paddingBottom: 8,
+    backgroundColor: "#343A40",
   },
   sectionTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   legalSection: {
     shadowOpacity: 0,
@@ -237,12 +248,12 @@ const styles = StyleSheet.create({
   },
   legalText: {
     fontSize: 16,
-    color: '#007AFF',
-    textAlign: 'center',
+    color: "#007AFF",
+    textAlign: "center",
   },
   versionText: {
     fontSize: 14,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 8,
     marginBottom: 30,
   },

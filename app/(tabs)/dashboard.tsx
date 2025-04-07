@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import Streak from "@/components/Streak";
 import ExerciseGoal from "@/components/ExerciseGoal";
 import PR from "@/components/PR";
@@ -8,6 +14,12 @@ import WeightTile from "@/components/WeightTile";
 import ChartsTile from "@/components/ChartsTile";
 import WeightFlipCard from "@/components/WeightFlipCard";
 import { useRouter } from "expo-router";
+import {
+  useFonts,
+  RobotoSlab_700Bold,
+  RobotoSlab_400Regular,
+} from "@expo-google-fonts/roboto-slab";
+import { RockSalt_400Regular } from "@expo-google-fonts/rock-salt";
 
 interface LoginProps {
   lastLoginDate: string;
@@ -53,10 +65,17 @@ export default function dashboard() {
   });
   const router = useRouter();
 
+  const [fontsLoaded] = useFonts({
+    RobotoSlab_700Bold,
+    RockSalt_400Regular,
+    RobotoSlab_400Regular,
+  });
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>CORGFIT</Text>
-      <Text style={styles.heading}>DASHBOARD</Text>
+      <Text style={styles.logo}>CORGFIT</Text>
+
+      <Text style={styles.heading}>My Fitness</Text>
+      <Text style={styles.subheading}>Track your progress & goals</Text>
       <View style={styles.rows}>
         <View style={styles.row}>
           <Pressable style={styles.card}>
@@ -79,15 +98,10 @@ export default function dashboard() {
             ></ExerciseGoal>
           </Pressable>
 
-          {/* <WeightTile
-              weight_this_week={weightProps.weight_this_week}
-              weight_last_week={weightProps.weight_last_week}
-            /> */}
           <WeightFlipCard
             weight_this_week={weightProps.weight_this_week}
             weight_last_week={weightProps.weight_last_week}
           />
-          {/* weight components */}
         </View>
         <View style={styles.row}>
           <Pressable style={styles.card}>
@@ -108,15 +122,34 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     padding: 16,
-    marginTop: 50,
+    paddingTop: 50,
+    backgroundColor: "#212529",
   },
-  heading: {
+
+  logo: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 10,
+    color: "white",
+    alignSelf: "center",
+    fontFamily: "RockSalt_400Regular",
+  },
+  heading: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 10,
     color: "white",
     alignSelf: "flex-start",
     marginLeft: 20,
+    fontFamily: "RobotoSlab_700Bold",
+  },
+  subheading: {
+    fontSize: 16,
+    marginBottom: 10,
+    color: "white",
+    alignSelf: "flex-start",
+    marginLeft: 20,
+    fontFamily: "RobotoSlab_400Regular",
   },
   row: {
     flexDirection: "row",
@@ -138,6 +171,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    gap: 40,
+    gap: "4%",
   },
 });
