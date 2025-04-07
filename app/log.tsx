@@ -35,7 +35,9 @@ export default function Log() {
   const scrollRef = useRef<ScrollView>(null);
 
   // Get the exercise image from EXERCISE_DATA
-  const exerciseImage = exerciseName ? EXERCISE_DATA[exerciseName][2] : require("@/assets/images/benchpress.png");
+  const exerciseImage = exerciseName && EXERCISE_DATA[exerciseName] 
+    ? EXERCISE_DATA[exerciseName][2] // How-to image is at index 2
+    : EXERCISE_DATA["Bench Press"][2]; // Default to Bench Press how-to image if none found
 
   // Scroll to the bottom of the modal when it is opened
   useEffect(() => {
@@ -78,7 +80,33 @@ export default function Log() {
     const updatedLoggedSets = currentSetLogged
       ? loggedSets
       : [...loggedSets, { setNumber: currentSet, reps: 4, weight: 40 }];
+
+    // Get the current set's data
+    const currentSetData = updatedLoggedSets.find(set => set.setNumber === currentSet);
     
+    // List of exercises where 0 weight is valid (bodyweight exercises)
+    const bodyweightExercises = [  "Plank",
+      "Pull Ups",
+      "Push Ups",
+      "Jump Rope",
+      "Bicycle Crunch",
+      "Leg Raise",
+      "Mountain Climbers",
+      "Russian Twist",
+      "Glute Bridge",
+      "Step Up",
+      "Split Squat",
+      "Walking Lunge",
+      "Lunges",
+      "Leg Split Squat",
+      "Tricep Dips"];
+    
+    // Validate weight for non-bodyweight exercises
+    if (!bodyweightExercises.includes(exerciseName) && currentSetData && currentSetData.weight === 0) {
+      alert(`Weight cannot be 0 for ${exerciseName}`);
+      return;
+    }
+
     // Update the exercise's logged status in the context
     setExercises(currentExercises => {
       const updatedExercises = currentExercises.map(exercise => {
@@ -174,7 +202,7 @@ export default function Log() {
           style={styles.log_button}
           onPress={handleLogWorkout}
         >
-          <Text style={styles.log_button_text}>Log Workout</Text>
+          <Text style={styles.log_button_text}>Log Set</Text>
         </Pressable>
       </View>
     </KeyboardAvoidingView>
@@ -223,6 +251,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
+    height: 220, // Set a fixed height for the image
     resizeMode: "cover", // This will ensure the image covers the space
   },
   row: {

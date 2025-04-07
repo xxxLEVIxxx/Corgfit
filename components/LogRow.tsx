@@ -32,8 +32,10 @@ export function LogRow({ index, isFocused, onSetData }: LogRowProps) {
 
   // this is a function that handles the reps change
   const handleRepsChange = (text: string) => {
-    // Only update if text isn't empty
-    if (text !== '') {
+    // Allow empty string for backspace operations
+    if (text === '') {
+      setReps(0);
+    } else {
       const newReps = parseInt(text) || 0;
       setReps(newReps);
     }
@@ -41,8 +43,10 @@ export function LogRow({ index, isFocused, onSetData }: LogRowProps) {
 
   // this is a function that handles the weight change
   const handleWeightChange = (text: string) => {
-    // Only update if text isn't empty
-    if (text !== '') {
+    // Allow empty string for backspace operations
+    if (text === '') {
+      setWeight(0);
+    } else {
       const newWeight = parseInt(text) || 0;
       setWeight(newWeight);
     }
