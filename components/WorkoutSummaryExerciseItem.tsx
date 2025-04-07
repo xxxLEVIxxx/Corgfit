@@ -34,7 +34,7 @@ const WorkoutSummaryExerciseItem = ({ exercise }: WorkoutSummaryExerciseItemProp
           <Image 
             source={exercise.image} 
             style={styles.exerciseImage} 
-            resizeMode="contain"
+            resizeMode="cover"
           />
         </View>
         
@@ -98,20 +98,23 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
     backgroundColor: "#2A2A2A",
-    minHeight: 110, // Reduced height to accommodate 3 sets plus header
+    minHeight: 110,
+    alignItems: "center",
   },
   imageContainer: {
     width: 80,
+    height: 90,
     justifyContent: "center",
     alignItems: "center",
-    padding: 8,
-    backgroundColor: "#2A2A2A", // Match the card background color
+    backgroundColor: "#2A2A2A",
+    overflow: "hidden",
+    borderRadius: 12,
+    marginLeft: 8,
   },
   exerciseImage: {
-    width: 70,
-    height: 90,
-    borderRadius: 12,
-    transform: [{ scaleY: 1.0 }], // visually increase the height by 50%
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   exerciseContent: {
     flex: 1,
