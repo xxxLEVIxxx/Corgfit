@@ -21,7 +21,6 @@ import TargetMuscle from "@/components/TargetMuscle";
 import ExerciseList from "@/components/ExerciseList";
 
 import { useExercises } from "../Context";
-import { useFonts, RobotoSlab_700Bold } from "@expo-google-fonts/roboto-slab";
 
 interface TargetMuscle {
   name: string;
@@ -43,9 +42,6 @@ export default function TabTwoScreen() {
   const { exercises, setExercises } = useExercises();
 
   // Load fonts
-  const [fontsLoaded] = useFonts({
-    RobotoSlab_700Bold,
-  });
   // Handle navigation to workout details
   const handleStartWorkout = () => {
     router.push("/workout_details");
