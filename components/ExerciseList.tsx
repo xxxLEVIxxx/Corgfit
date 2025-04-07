@@ -24,14 +24,10 @@ import ExerciseCard from "./ExerciseCard";
 //   reps: number;
 //   weight: number;
 // }
-import { useFonts, RobotoSlab_700Bold } from "@expo-google-fonts/roboto-slab";
 
 export default function ExerciseList() {
   const { exercises, setExercises } = useExercises();
   const router = useRouter();
-  const [fontsLoaded] = useFonts({
-    RobotoSlab_700Bold,
-  });
 
   const deleteExercise = (index: number) => {
     setExercises(exercises.filter((exercise) => exercise.id !== index));

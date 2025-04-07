@@ -14,12 +14,6 @@ import WeightTile from "@/components/WeightTile";
 import ChartsTile from "@/components/ChartsTile";
 import WeightFlipCard from "@/components/WeightFlipCard";
 import { useRouter } from "expo-router";
-import {
-  useFonts,
-  RobotoSlab_700Bold,
-  RobotoSlab_400Regular,
-} from "@expo-google-fonts/roboto-slab";
-import { RockSalt_400Regular } from "@expo-google-fonts/rock-salt";
 
 interface LoginProps {
   lastLoginDate: string;
@@ -65,11 +59,6 @@ export default function dashboard() {
   });
   const router = useRouter();
 
-  const [fontsLoaded] = useFonts({
-    RobotoSlab_700Bold,
-    RockSalt_400Regular,
-    RobotoSlab_400Regular,
-  });
   return (
     <View style={styles.container}>
       <Text style={styles.logo}>CORGFIT</Text>
@@ -129,6 +118,7 @@ const styles = StyleSheet.create({
   logo: {
     fontSize: 24,
     fontWeight: "bold",
+    height: 50,
     marginBottom: 10,
     color: "white",
     alignSelf: "center",
@@ -142,6 +132,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginLeft: 20,
     fontFamily: "RobotoSlab_700Bold",
+    width: "100%",
   },
   subheading: {
     fontSize: 16,
@@ -150,6 +141,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginLeft: 20,
     fontFamily: "RobotoSlab_400Regular",
+    width: "100%",
   },
   row: {
     flexDirection: "row",
