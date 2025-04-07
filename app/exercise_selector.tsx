@@ -30,6 +30,7 @@ interface ExerciseElement {
 export default function ExerciseSelector() {
   const { exercises, setExercises } = useExercises();
   const [search, setSearch] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("");
 
   const colorScheme = useColorScheme();
   const router = useRouter();
@@ -129,18 +130,29 @@ export default function ExerciseSelector() {
   const handleInputChange = (text: string) => {
     setSearch(text);
     setSelectedExercises(
-      exerciseList.filter((exercise) =>
+      filteredExercises.filter((exercise) =>
         exercise.name.toLowerCase().includes(text.toLowerCase())
       )
     );
   };
-  const handleFilterChange = (selectedGroup: string) => {
-    setFilteredExercises(
-      selectedExercises.filter((exercise) =>
-        exercise.category.includes(selectedGroup)
+
+  const handleInputFilterChange = (exerciseList: ExerciseElement[]) => {
+    setSelectedExercises(
+      exerciseList.filter((exercise) =>
+        exercise.name.toLowerCase().includes(search.toLowerCase())
       )
     );
   };
+  const handleFilterChange = (selectedGroup: string) => {
+    const tempList = exerciseList.filter((exercise) =>
+      exercise.category.includes(selectedGroup)
+    );
+
+    setFilteredExercises(tempList);
+    handleInputFilterChange(tempList);
+    setSelectedGroup(selectedGroup);
+  };
+
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.header}>
@@ -170,7 +182,6 @@ export default function ExerciseSelector() {
           }
           value={search}
           onChangeText={handleInputChange}
-          clearButtonMode="while-editing"
         />
         {search.length > 0 && (
           <TouchableOpacity
@@ -190,7 +201,13 @@ export default function ExerciseSelector() {
 
       <View style={styles.row}>
         <Text style={styles.headerTitle}>Target Groups</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedExercises(exerciseList);
+            setFilteredExercises(exerciseList);
+            setSearch("");
+          }}
+        >
           <Text style={{ color: "white" }}>Clear all</Text>
         </TouchableOpacity>
       </View>
@@ -199,7 +216,10 @@ export default function ExerciseSelector() {
           <TouchableOpacity
             key={index}
             onPress={() => handleFilterChange(item)}
-            style={styles.button}
+            style={[
+              styles.button,
+              item === selectedGroup && styles.activeButton,
+            ]}
           >
             <Text>{item}</Text>
           </TouchableOpacity>
@@ -208,7 +228,7 @@ export default function ExerciseSelector() {
 
       {/* Exercise List */}
       <FlatList
-        data={filteredExercises}
+        data={selectedExercises}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handleSelectExercise(item)}>
@@ -220,6 +240,13 @@ export default function ExerciseSelector() {
             </ThemedView>
           </TouchableOpacity>
         )}
+        ListEmptyComponent={
+          <ThemedView style={styles.emptyContainer}>
+            <ThemedText style={styles.emptyText}>
+              No available exercises found
+            </ThemedText>
+          </ThemedView>
+        }
       />
     </ThemedView>
   );
@@ -234,6 +261,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     paddingTop: 30,
+    backgroundColor: "#212529",
   },
   rootView: {
     flex: 1,
@@ -246,6 +274,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginTop: 30,
     paddingHorizontal: 20,
+    backgroundColor: "#212529",
   },
   headerTitle: {
     fontSize: 24,
@@ -258,7 +287,7 @@ const styles = StyleSheet.create({
   },
   exerciseItem: {
     margin: 10,
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#343A40",
     alignItems: "center",
 
     borderRadius: 10,
@@ -310,5 +339,20 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 5,
   },
+  activeButton: {
+    backgroundColor: "orange",
+  },
   // ... similar styles to workout_details.tsx
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
+  },
+  emptyText: {
+    color: "white",
+    fontSize: 16,
+    textAlign: "center",
+    paddingHorizontal: 20,
+  },
 });

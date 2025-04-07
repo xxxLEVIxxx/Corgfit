@@ -1,15 +1,23 @@
 import React, { useEffect } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import Streak from "@/components/Streak";
 import ExerciseGoal from "@/components/ExerciseGoal";
 import PR from "@/components/PR";
 import MusclesTile from "@/components/MusclesTile";
-import WeightTile from "@/components/WeightTile"
+import WeightTile from "@/components/WeightTile";
 import ChartsTile from "@/components/ChartsTile";
+import WeightFlipCard from "@/components/WeightFlipCard";
+import { useRouter } from "expo-router";
 
 interface LoginProps {
   lastLoginDate: string;
-  
+
   streakCount: number;
 }
 
@@ -40,22 +48,23 @@ export default function dashboard() {
       progress: 125,
       exerciseName: "Bench Press",
     });
-  
-  const [musclesProps, setMusclesProps] =
-    React.useState<MusclesProps>({
-      muscles: "Chest",
-    });
-  
-  const [weightProps, setWeightProps] =
-    React.useState<WeightProps>({
-      weight_this_week: 173,
-      weight_last_week: 176,
-    });
+
+  const [musclesProps, setMusclesProps] = React.useState<MusclesProps>({
+    muscles: "Chest",
+  });
+
+  const [weightProps, setWeightProps] = React.useState<WeightProps>({
+    weight_this_week: 173,
+    weight_last_week: 176,
+  });
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>CORGFIT</Text>
-      <Text style={styles.heading}>DASHBOARD</Text>
+      <Text style={styles.logo}>CORGFIT</Text>
+
+      <Text style={styles.heading}>My Fitness</Text>
+      <Text style={styles.subheading}>Track your progress & goals</Text>
       <View style={styles.rows}>
         <View style={styles.row}>
           <Pressable style={styles.card}>
@@ -65,8 +74,8 @@ export default function dashboard() {
             />
           </Pressable>
           <Pressable style={styles.card}>
-          <MusclesTile muscles={musclesProps.muscles} />
-          {/* target muscles components */}
+            <MusclesTile muscles={musclesProps.muscles} />
+            {/* target muscles components */}
           </Pressable>
         </View>
         <View style={styles.row}>
@@ -77,20 +86,18 @@ export default function dashboard() {
               exerciseName={exerciseGoalProps.exerciseName}
             ></ExerciseGoal>
           </Pressable>
-          <Pressable style={styles.card}>
-            <WeightTile
-              weight_this_week={weightProps.weight_this_week}
-              weight_last_week={weightProps.weight_last_week}
-            />
-            {/* weight components */}
-          </Pressable>
+
+          <WeightFlipCard
+            weight_this_week={weightProps.weight_this_week}
+            weight_last_week={weightProps.weight_last_week}
+          />
         </View>
         <View style={styles.row}>
           <Pressable style={styles.card}>
             <PR />
           </Pressable>
-          <Pressable style={styles.card}>
-          <ChartsTile chartTitle="Progress Chart" />
+          <Pressable style={styles.card} onPress={() => router.push("/charts")}>
+            <ChartsTile chartTitle="Progress Chart" />
           </Pressable>
         </View>
       </View>
@@ -104,15 +111,37 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     padding: 16,
-    marginTop: 50,
+    paddingTop: 50,
+    backgroundColor: "#212529",
   },
-  heading: {
+
+  logo: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    height: 50,
+    marginBottom: 10,
+    color: "white",
+    alignSelf: "center",
+    fontFamily: "RockSalt_400Regular",
+  },
+  heading: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 10,
     color: "white",
     alignSelf: "flex-start",
     marginLeft: 20,
+    fontFamily: "RobotoSlab_700Bold",
+    width: "100%",
+  },
+  subheading: {
+    fontSize: 16,
+    marginBottom: 10,
+    color: "white",
+    alignSelf: "flex-start",
+    marginLeft: 20,
+    fontFamily: "RobotoSlab_400Regular",
+    width: "100%",
   },
   row: {
     flexDirection: "row",
@@ -134,6 +163,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    gap: 40,
+    gap: "4%",
   },
 });

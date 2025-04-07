@@ -40,7 +40,8 @@ export default function TabTwoScreen() {
   const router = useRouter();
   const [targetMuscles, setTargetMuscles] = useState<TargetMuscle[]>([]);
   const { exercises, setExercises } = useExercises();
-  
+
+  // Load fonts
   // Handle navigation to workout details
   const handleStartWorkout = () => {
     router.push("/workout_details");
@@ -51,7 +52,7 @@ export default function TabTwoScreen() {
       <Text style={styles.title}>Workout Plan</Text>
       <TargetMuscle />
       <ExerciseList />
-      
+
       {/* <View style={styles.summaryContainer}>
         <TouchableOpacity 
           style={[styles.addButton, styles.summaryButton]}
@@ -71,14 +72,16 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
+    backgroundColor: "#212529",
     padding: 35,
+    paddingTop: 50,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#fff",
     marginBottom: 20,
+    fontFamily: "RobotoSlab_700Bold",
   },
   startButton: {
     backgroundColor: "#FF9800",

@@ -23,21 +23,23 @@ export default function Log() {
   const exerciseName = params.exerciseName as string;
   const exerciseId = parseInt(params.exerciseId as string);
   const { exercises, setExercises } = useExercises();
-  
+
   // Get the current exercise
-  const currentExercise = exercises.find(ex => ex.id === exerciseId);
-  
+  const currentExercise = exercises.find((ex) => ex.id === exerciseId);
+
   const [HowToModalVisible, setHowToModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentSet, setCurrentSet] = useState(1);
   const [maxSets, setMaxSets] = useState<number>(3);
-  const [loggedSets, setLoggedSets] = useState<Array<{ setNumber: number; reps: number; weight: number }>>([]);
+  const [loggedSets, setLoggedSets] = useState<
+    Array<{ setNumber: number; reps: number; weight: number }>
+  >([]);
   const scrollRef = useRef<ScrollView>(null);
 
   // Get the exercise image from EXERCISE_DATA
-  const exerciseImage = exerciseName && EXERCISE_DATA[exerciseName] 
-    ? EXERCISE_DATA[exerciseName][2] // How-to image is at index 2
-    : EXERCISE_DATA["Bench Press"][2]; // Default to Bench Press how-to image if none found
+  const exerciseImage = exerciseName
+    ? EXERCISE_DATA[exerciseName][2]
+    : require("@/assets/images/benchpress.png");
 
   // Scroll to the bottom of the modal when it is opened
   useEffect(() => {
@@ -50,18 +52,20 @@ export default function Log() {
 
   // Handle set data from LogForm
   const handleSetData = (reps: number, weight: number) => {
-    console.log('handleSetData called with:', { reps, weight, currentSet });
-    setLoggedSets(prev => {
+    console.log("handleSetData called with:", { reps, weight, currentSet });
+    setLoggedSets((prev) => {
       // Update the current set if it exists, or add a new one
-      const existingSetIndex = prev.findIndex(set => set.setNumber === currentSet);
+      const existingSetIndex = prev.findIndex(
+        (set) => set.setNumber === currentSet
+      );
       if (existingSetIndex >= 0) {
         const newSets = [...prev];
         newSets[existingSetIndex] = { setNumber: currentSet, reps, weight };
-        console.log('Updated existing set:', newSets);
+        console.log("Updated existing set:", newSets);
         return newSets;
       } else {
         const newSets = [...prev, { setNumber: currentSet, reps, weight }];
-        console.log('Added new set:', newSets);
+        console.log("Added new set:", newSets);
         return newSets;
       }
     });
@@ -69,13 +73,15 @@ export default function Log() {
 
   // Log workout
   const handleLogWorkout = () => {
-    console.log('Current logged sets:', loggedSets);
-    console.log('Current set:', currentSet);
-    console.log('Max sets:', maxSets);
-    
+    console.log("Current logged sets:", loggedSets);
+    console.log("Current set:", currentSet);
+    console.log("Max sets:", maxSets);
+
     // Make sure the current set is logged before continuing
-    const currentSetLogged = loggedSets.some(set => set.setNumber === currentSet);
-    
+    const currentSetLogged = loggedSets.some(
+      (set) => set.setNumber === currentSet
+    );
+
     // If not logged yet, create a set with default values instead of calling handleSetData
     const updatedLoggedSets = currentSetLogged
       ? loggedSets
@@ -108,21 +114,21 @@ export default function Log() {
     }
 
     // Update the exercise's logged status in the context
-    setExercises(currentExercises => {
-      const updatedExercises = currentExercises.map(exercise => {
+    setExercises((currentExercises) => {
+      const updatedExercises = currentExercises.map((exercise) => {
         if (exercise.id === exerciseId) {
-          console.log('Updating exercise:', exercise.name);
-          console.log('With logged sets:', updatedLoggedSets);
+          console.log("Updating exercise:", exercise.name);
+          console.log("With logged sets:", updatedLoggedSets);
           return {
             ...exercise,
             isLogged: true,
             logged: `${currentSet}/${maxSets} Sets Logged`,
-            loggedSets: updatedLoggedSets
+            loggedSets: updatedLoggedSets,
           };
         }
         return exercise;
       });
-      console.log('Updated exercises:', updatedExercises);
+      console.log("Updated exercises:", updatedExercises);
       return updatedExercises;
     });
 
@@ -161,10 +167,7 @@ export default function Log() {
         contentContainerStyle={{ paddingBottom: 100 }} // Add padding for bottom button
       >
         <View style={styles.modal}>
-          <Image
-            source={exerciseImage}
-            style={styles.image}
-          />
+          <Image source={exerciseImage} style={styles.image} />
           <View style={styles.row}>
             <Text style={styles.title}>{exerciseName || "Exercise"}</Text>
             <Pressable
@@ -198,10 +201,7 @@ export default function Log() {
 
       {/* this is a button that logs the workout */}
       <View style={styles.bottom}>
-        <Pressable 
-          style={styles.log_button}
-          onPress={handleLogWorkout}
-        >
+        <Pressable style={styles.log_button} onPress={handleLogWorkout}>
           <Text style={styles.log_button_text}>Log Set</Text>
         </Pressable>
       </View>

@@ -61,6 +61,7 @@ export default function RootLayout() {
               name="exercise_selector"
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="charts" options={{ headerShown: false }} />
           </Stack>
           <StatusBar style="auto" />
         </ThemeProvider>

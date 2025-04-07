@@ -89,7 +89,7 @@ const ExerciseCard = ({
       <ThemedView
         style={[
           styles.exerciseCard,
-          { backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#F2F2F7" },
+          { backgroundColor: colorScheme === "dark" ? "#343A40" : "#F2F2F7" },
         ]}
       >
         <Image source={image} style={styles.exerciseImage} />
