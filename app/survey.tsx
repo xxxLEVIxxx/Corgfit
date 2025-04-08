@@ -43,11 +43,44 @@ const SurveyScreen = () => {
     { label: 'Improve Fitness', value: 'fitness' },
   ]);
 
+  // Weekly Activity Days
+  const [activity, setActivity] = useState(null);
+  const [activityOpen, setActivityOpen] = useState(false);
+  const [activityItems, setActivityItems] = useState([
+    { label: '0 days', value: 0 },
+    { label: '1-2 days', value: 1 },
+    { label: '3-4 days', value: 2 },
+    { label: '5-6 days', value: 3 },
+    { label: '7 days', value: 4 },
+  ]);
+
+  // Intensity
+  const [intensity, setIntensity] = useState(null);
+  const [intensityOpen, setIntensityOpen] = useState(false);
+  const [intensityItems, setIntensityItems] = useState([
+    { label: 'Light', value: 'light' },
+    { label: 'Moderate', value: 'moderate' },
+    { label: 'Intense', value: 'intense' },
+  ]);
+
+  // Sedentary hours
+  const [sedentary, setSedentary] = useState(null);
+  const [sedentaryOpen, setSedentaryOpen] = useState(false);
+  const [sedentaryItems, setSedentaryItems] = useState([
+    { label: 'Less than 2 hours', value: 0 },
+    { label: '2-4 hours', value: 1 },
+    { label: '4-6 hours', value: 2 },
+    { label: '6+ hours', value: 3 },
+  ]);
+
   // Close dropdowns when typing or tapping outside
   const closeDropdowns = () => {
     setGenderOpen(false);
     setExperienceOpen(false);
     setGoalOpen(false);
+    setActivityOpen(false);
+    setIntensityOpen(false);
+    setSedentaryOpen(false);
   };
 
   const handleNext = () => setStep(2);
@@ -164,7 +197,7 @@ const SurveyScreen = () => {
         {/* Step 2: Workout Preferences */}
         {step === 2 && (
           <View style={styles.content}>
-            <View style={{ zIndex: 3000, marginBottom: 20 }}>
+            <View style={{ zIndex: 5000, marginBottom: 20 }}>
               <Text style={styles.label}>Workout Experience</Text>
               <DropDownPicker
                 open={experienceOpen}
@@ -177,12 +210,12 @@ const SurveyScreen = () => {
                 style={styles.dropdown}
                 textStyle={styles.dropdownText}
                 placeholderStyle={styles.placeholderStyle}
-                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 3000 }]}
+                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 5000 }]}
                 onOpen={() => {closeDropdowns(); setExperienceOpen(true);}}
               />
             </View>
 
-            <View style={{ zIndex: 2000 }}>
+            <View style={{ zIndex: 4000, marginBottom: 20 }}>
               <Text style={styles.label}>Workout Target</Text>
               <DropDownPicker
                 open={goalOpen}
@@ -195,8 +228,62 @@ const SurveyScreen = () => {
                 style={styles.dropdown}
                 textStyle={styles.dropdownText}
                 placeholderStyle={styles.placeholderStyle}
-                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 2000 }]}
+                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 4000 }]}
                 onOpen={() => {closeDropdowns(); setGoalOpen(true);}}
+              />
+            </View>
+
+            <View style={{ zIndex: 3000, marginBottom: 20 }}>
+              <Text style={styles.label}>Weekly Activity Days</Text>
+              <DropDownPicker
+                open={activityOpen}
+                value={activity}
+                items={activityItems}
+                setOpen={setActivityOpen}
+                setValue={setActivity}
+                setItems={setActivityItems}
+                placeholder="Select the frequency"
+                style={styles.dropdown}
+                textStyle={styles.dropdownText}
+                placeholderStyle={styles.placeholderStyle}
+                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 3000 }]}
+                onOpen={() => {closeDropdowns(); setActivityOpen(true);}}
+              />
+            </View>
+
+            <View style={{ zIndex: 2000, marginBottom: 20 }}>
+              <Text style={styles.label}>Activity Intensity</Text>
+              <DropDownPicker
+                open={intensityOpen}
+                value={intensity}
+                items={intensityItems}
+                setOpen={setIntensityOpen}
+                setValue={setIntensity}
+                setItems={setIntensityItems}
+                placeholder="Select frequency"
+                style={styles.dropdown}
+                textStyle={styles.dropdownText}
+                placeholderStyle={styles.placeholderStyle}
+                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 2000 }]}
+                onOpen={() => {closeDropdowns(); setIntensityOpen(true);}}
+              />
+            </View>
+
+            <View style={{ zIndex: 1000, marginBottom: 20 }}>
+              <Text style={styles.label}>Daily Sedentary Hours</Text>
+              <DropDownPicker
+                open={sedentaryOpen}
+                value={sedentary}
+                items={sedentaryItems}
+                setOpen={setSedentaryOpen}
+                setValue={setSedentary}
+                setItems={setSedentaryItems}
+                placeholder="Select sedentary hours"
+                style={styles.dropdown}
+                textStyle={styles.dropdownText}
+                placeholderStyle={styles.placeholderStyle}
+                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 1000 }]}
+                onOpen={() => {closeDropdowns(); setSedentaryOpen(true);}}
               />
             </View>
 
