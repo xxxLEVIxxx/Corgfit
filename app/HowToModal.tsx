@@ -154,7 +154,7 @@ export default HowToModalPage;
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#212529",
     paddingTop: Platform.OS === "ios" ? 95 : 40,
     paddingHorizontal: 10,
   },
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     }),
   },
   tabBar: {
-    backgroundColor: "#333",
+    backgroundColor: "#212529",
     elevation: 2,
     ...Platform.select({
       ios: {
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   tabContent: {
     flex: 1,
     padding: 15,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#212529",
   },
   text: {
     fontSize: 16,

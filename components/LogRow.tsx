@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, TextInput, StyleSheet, Text } from "react-native";
 import Svg, { Polygon, Text as SvgText } from "react-native-svg";
 import React from "react";
@@ -6,22 +6,65 @@ import React from "react";
 interface LogRowProps {
   index: number;
   isFocused: boolean;
+  onSetData: (reps: number, weight: number) => void;
 }
 
-export function LogRow({ index, isFocused }: LogRowProps) {
-  const [reps, setReps] = useState(4);
-  const [weight, setWeight] = useState(40);
+export function LogRow({ index, isFocused, onSetData }: LogRowProps) {
+  const defaultRepsValue = "4";
+  const defaultWeightValue = "40";
 
-  // this is a function that handles the reps change
+  const [reps, setReps] = useState<string>(defaultRepsValue);
+  const [weight, setWeight] = useState<string>(defaultWeightValue);
+
+  const [repsError, setRepsError] = useState<string>("");
+  const [weightError, setWeightError] = useState<string>("");
+
+  useEffect(() => {
+    if (isFocused) {
+      const repsValue = reps === "" ? parseInt(defaultRepsValue, 10) : parseInt(reps, 10);
+      const weightValue = weight === "" ? parseInt(defaultWeightValue, 10) : parseInt(weight, 10);
+      onSetData(repsValue, weightValue);
+    }
+  }, [isFocused, reps, weight, index]);
+
+  useEffect(() => {
+    if (index === 1) {
+      const repsValue = reps === "" ? parseInt(defaultRepsValue, 10) : parseInt(reps, 10);
+      const weightValue = weight === "" ? parseInt(defaultWeightValue, 10) : parseInt(weight, 10);
+      onSetData(repsValue, weightValue);
+    }
+  }, []);
+
   const handleRepsChange = (text: string) => {
-    const newReps = parseInt(text) || 0;
-    setReps(newReps);
+    setReps(text);
+    if (text === "") {
+      setRepsError("It cannot be empty!");
+    } else {
+      setRepsError("");
+    }
   };
 
-  // this is a function that handles the weight change
   const handleWeightChange = (text: string) => {
-    const newWeight = parseInt(text) || 0;
-    setWeight(newWeight);
+    setWeight(text);
+    if (text === "") {
+      setWeightError("It cannot be empty!");
+    } else {
+      setWeightError("");
+    }
+  };
+
+  const handleRepsBlur = () => {
+    if (reps === "") {
+      setReps(defaultRepsValue);
+      setRepsError("");
+    }
+  };
+
+  const handleWeightBlur = () => {
+    if (weight === "") {
+      setWeight(defaultWeightValue);
+      setWeightError("");
+    }
   };
 
   return (
@@ -30,21 +73,46 @@ export function LogRow({ index, isFocused }: LogRowProps) {
         <Polygon
           points="30,0 60,15 60,45 30,60 0,45 0,15"
           fill={isFocused ? "orange" : "#343A40"}
-        ></Polygon>
+        />
         <SvgText x="30" y="35" textAnchor="middle" fill="white" fontSize={24}>
           {index}
         </SvgText>
       </Svg>
-      <TextInput
-        style={isFocused ? styles.focused_input : styles.unfocused_input}
-        onBlur={(e) => handleRepsChange(e.nativeEvent.text)}
-        defaultValue={reps.toString()}
-      />
-      <TextInput
-        style={isFocused ? styles.focused_input : styles.unfocused_input}
-        onBlur={(e) => handleWeightChange(e.nativeEvent.text)}
-        defaultValue={weight.toString()}
-      />
+      <View style={styles.inputWrapper}>
+        <TextInput
+          style={isFocused ? styles.focused_input : styles.unfocused_input}
+          onChangeText={handleRepsChange}
+          onBlur={handleRepsBlur}
+          value={reps}
+          keyboardType="numeric"
+          placeholder="0"
+          placeholderTextColor="#666"
+          selectTextOnFocus={true}
+        />
+        {repsError !== "" && (
+          <Text style={styles.errorTooltip} numberOfLines={1}>
+            {repsError}
+          </Text>
+        )}
+      </View>
+
+      <View style={styles.inputWrapper}>
+        <TextInput
+          style={isFocused ? styles.focused_input : styles.unfocused_input}
+          onChangeText={handleWeightChange}
+          onBlur={handleWeightBlur}
+          value={weight}
+          keyboardType="numeric"
+          placeholder="0"
+          placeholderTextColor="#666"
+          selectTextOnFocus={true}
+        />
+        {weightError !== "" && (
+          <Text style={styles.errorTooltip} numberOfLines={1}>
+            {weightError}
+          </Text>
+        )}
+      </View>
 
       {isFocused && (
         <>
@@ -64,6 +132,10 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingLeft: 20,
     paddingRight: 20,
+  },
+  inputWrapper: {
+    position: "relative",
+    alignItems: "center",
   },
   focused_input: {
     height: 45,
@@ -86,6 +158,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontWeight: "bold",
     padding: 10,
+  },
+  errorTooltip: {
+    position: "absolute",
+    top: -18,
+    left: -18,
+    // Ensure there's enough width for one line of text:
+    width: 180,
+    color: "red",
+    fontSize: 12,
+    textAlign: "center",
   },
   tooltip1: {
     position: "absolute",

@@ -4,9 +4,9 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 
 interface Set {
+  setNumber: number;
   reps: number;
   weight: number;
-  unit: string;
 }
 
 interface Exercise {
@@ -34,7 +34,7 @@ const WorkoutSummaryExerciseItem = ({ exercise }: WorkoutSummaryExerciseItemProp
           <Image 
             source={exercise.image} 
             style={styles.exerciseImage} 
-            resizeMode="contain"
+            resizeMode="cover"
           />
         </View>
         
@@ -54,12 +54,13 @@ const WorkoutSummaryExerciseItem = ({ exercise }: WorkoutSummaryExerciseItemProp
             )}
           </View>
           
+          {/* Sets Container - Display columns side by side */}
           <View style={styles.setsOuterContainer}>
             {/* First column of sets - always show up to 3 sets */}
             <View style={styles.setsContainer}>
               {firstColumn.map((set, index) => (
                 <ThemedText key={`first-${index}`} style={styles.setInfo}>
-                  {set.reps} × {set.weight} {set.unit}
+                  {set.reps} × {set.weight} lb
                 </ThemedText>
               ))}
               
@@ -71,10 +72,10 @@ const WorkoutSummaryExerciseItem = ({ exercise }: WorkoutSummaryExerciseItemProp
             
             {/* Second column of sets if more than 3 sets */}
             {secondColumn.length > 0 && (
-              <View style={[styles.setsContainer, styles.secondColumn]}>
+              <View style={styles.setsContainer}>
                 {secondColumn.map((set, index) => (
                   <ThemedText key={`second-${index}`} style={styles.setInfo}>
-                    {set.reps} × {set.weight} {set.unit}
+                    {set.reps} × {set.weight} lb
                   </ThemedText>
                 ))}
               </View>
@@ -97,20 +98,23 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
     backgroundColor: "#2A2A2A",
-    minHeight: 110, // Reduced height to accommodate 3 sets plus header
+    minHeight: 110,
+    alignItems: "center",
   },
   imageContainer: {
     width: 80,
+    height: 90,
     justifyContent: "center",
     alignItems: "center",
-    padding: 8,
-    backgroundColor: "#2A2A2A", // Match the card background color
+    backgroundColor: "#2A2A2A",
+    overflow: "hidden",
+    borderRadius: 12,
+    marginLeft: 8,
   },
   exerciseImage: {
-    width: 70,
-    height: 90,
-    borderRadius: 12,
-    transform: [{ scaleY: 1.0 }], // visually increase the height by 50%
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   exerciseContent: {
     flex: 1,
@@ -128,14 +132,12 @@ const styles = StyleSheet.create({
   },
   setsOuterContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
+    justifyContent: "flex-start",
   },
   setsContainer: {
     flexDirection: "column",
     minWidth: 100,
-  },
-  secondColumn: {
-    marginLeft: 20,
+    marginRight: 20,
   },
   setInfo: {
     fontSize: 14,

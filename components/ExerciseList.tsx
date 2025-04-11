@@ -1,11 +1,20 @@
-import { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Modal, FlatList, Animated } from 'react-native';
+import { useState, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Modal,
+  FlatList,
+  Animated,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Swipeable } from 'react-native-gesture-handler';
+import { Swipeable } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-import { useExercises } from '@/app/Context';
-import { useRouter } from 'expo-router';
-import ExerciseCard from './ExerciseCard';
+import { useExercises } from "@/app/Context";
+import { useRouter } from "expo-router";
+import ExerciseCard from "./ExerciseCard";
 
 // interface Exercise {
 //   id: number;

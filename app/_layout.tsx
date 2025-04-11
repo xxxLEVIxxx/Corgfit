@@ -45,6 +45,7 @@ export default function RootLayout() {
             <Stack.Screen name="login" options={{ headerShown: false }} />
             <Stack.Screen name="signup" options={{ headerShown: false }} />
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="survey" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
             <Stack.Screen
               name="workout_details"
@@ -60,6 +61,7 @@ export default function RootLayout() {
               name="exercise_selector"
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="charts" options={{ headerShown: false }} />
           </Stack>
           <StatusBar style="auto" />
         </ThemeProvider>

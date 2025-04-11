@@ -11,6 +11,11 @@ export interface Exercise {
   category: string;
   logged?: string;
   isLogged?: boolean;
+  loggedSets?: Array<{
+    setNumber: number;
+    reps: number;
+    weight: number;
+  }>;
 }
 
 interface ExerciseDetail {

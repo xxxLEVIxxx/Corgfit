@@ -20,9 +20,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-import ExerciseCard from '../components/ExerciseCard';
+import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import ExerciseCard from "../components/ExerciseCard";
 import { useExercises } from "./Context";
 
 export default function WorkoutDetails() {
@@ -30,25 +30,26 @@ export default function WorkoutDetails() {
   const router = useRouter();
   const { exercises, setExercises } = useExercises();
 
-  // Set initial logged exercises, 0 and 4 as an example
-  useEffect(() => {
-    setExercises(currentExercises => 
-      currentExercises.map((exercise, index) => {
-        if (index === 0 || index === 4) {
-          return {
-            ...exercise,
-            isLogged: true,
-            logged: '3/3 Sets Logged'
-          };
-        }
-        return exercise;
-      })
-    );
-  }, []);
+  // // Set initial logged exercises, 0 and 4 as an example
+  // useEffect(() => {
+  //   setExercises(currentExercises =>
+  //     currentExercises.map((exercise, index) => {
+  //       if (index === 0 || index === 4) {
+  //         return {
+  //           ...exercise,
+  //           isLogged: true,
+  //           logged: '3/3 Sets Logged'
+  //         };
+  //       }
+  //       return exercise;
+  //     })
+  //   );
+  // }, []);
 
   const dynamicStyles = {
     container: {
-      backgroundColor: Colors[colorScheme === 'light' ? 'light' : 'dark'].background,
+      backgroundColor:
+        Colors[colorScheme === "light" ? "light" : "dark"].background,
     },
     exerciseCard: {
       backgroundColor: colorScheme === "dark" ? "#2A2A2A" : "#F2F2F7",
@@ -73,9 +74,15 @@ export default function WorkoutDetails() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme === 'light' ? 'light' : 'dark'].background }}>
+    <View
+      style={{
+        flex: 1,
+        paddingTop: 50,
+        backgroundColor: "#212529",
+      }}
+    >
       <GestureHandlerRootView style={styles.rootView}>
-        <ThemedView style={[styles.container, dynamicStyles.container]}>
+        <ThemedView style={[styles.container]}>
           {/* Header */}
           <ThemedView style={styles.header}>
             <ThemedText style={styles.headerTitle}>
@@ -86,7 +93,7 @@ export default function WorkoutDetails() {
               <Ionicons
                 name="add-circle-outline"
                 size={24}
-                color={Colors[colorScheme === 'light' ? 'light' : 'dark'].text}
+                color={Colors[colorScheme === "light" ? "light" : "dark"].text}
               />
             </TouchableOpacity>
           </ThemedView>
@@ -100,7 +107,17 @@ export default function WorkoutDetails() {
             contentContainerStyle={styles.listContent}
             style={styles.list}
             renderItem={({ item, index }) => (
-              <TouchableOpacity onPress={() => {router.push('/log')}}>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push({
+                    pathname: "/log",
+                    params: {
+                      exerciseName: item.name,
+                      exerciseId: item.id,
+                    },
+                  });
+                }}
+              >
                 <ExerciseCard
                   {...item}
                   isLogged={item.isLogged || false}
@@ -110,7 +127,7 @@ export default function WorkoutDetails() {
                   details={`${item.sets} Sets • ${item.reps} Reps • ${item.weight} lb`}
                   onSwipeableOpen={closeAllSwipeables}
                   onSwipeableWillOpen={closeAllSwipeables}
-                  colorScheme={colorScheme === 'light' ? 'light' : 'dark'}
+                  colorScheme={colorScheme === "light" ? "light" : "dark"}
                 />
               </TouchableOpacity>
             )}
@@ -121,11 +138,11 @@ export default function WorkoutDetails() {
             style={styles.closeButton}
             onPress={() => router.replace("/workout_summary")}
           >
-            <Ionicons name="close" size={24} color="white" />
+            <Ionicons name="square" size={24} color="white" />
           </TouchableOpacity>
         </ThemedView>
       </GestureHandlerRootView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -133,18 +150,22 @@ const styles = StyleSheet.create({
   rootView: {
     flex: 1,
     width: "100%",
+    backgroundColor: "#212529",
   },
   container: {
     flex: 1,
     width: "100%",
+    backgroundColor: "#212529",
+    paddingHorizontal: 20,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 24,
+    marginBottom: 12,
     marginTop: 20,
     paddingHorizontal: 20,
+    backgroundColor: "#212529",
   },
   headerTitle: {
     fontSize: 24,
