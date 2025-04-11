@@ -10,45 +10,60 @@ interface LogRowProps {
 }
 
 export function LogRow({ index, isFocused, onSetData }: LogRowProps) {
-  const [reps, setReps] = useState(4);
-  const [weight, setWeight] = useState(40);
+  const defaultRepsValue = "4";
+  const defaultWeightValue = "40";
 
-  // Call onSetData with values whenever this row is focused or values change
+  const [reps, setReps] = useState<string>(defaultRepsValue);
+  const [weight, setWeight] = useState<string>(defaultWeightValue);
+
+  const [repsError, setRepsError] = useState<string>("");
+  const [weightError, setWeightError] = useState<string>("");
+
   useEffect(() => {
     if (isFocused) {
-      onSetData(reps, weight);
+      const repsValue = reps === "" ? parseInt(defaultRepsValue, 10) : parseInt(reps, 10);
+      const weightValue = weight === "" ? parseInt(defaultWeightValue, 10) : parseInt(weight, 10);
+      onSetData(repsValue, weightValue);
     }
-  // Remove onSetData from dependency array to prevent infinite loops
   }, [isFocused, reps, weight, index]);
 
-  // Call onSetData with initial values when component mounts
   useEffect(() => {
-    // Only for the first row, set initial values
     if (index === 1) {
-      onSetData(reps, weight);
+      const repsValue = reps === "" ? parseInt(defaultRepsValue, 10) : parseInt(reps, 10);
+      const weightValue = weight === "" ? parseInt(defaultWeightValue, 10) : parseInt(weight, 10);
+      onSetData(repsValue, weightValue);
     }
-  // Use an empty dependency array to ensure this only runs once on mount
   }, []);
 
-  // this is a function that handles the reps change
   const handleRepsChange = (text: string) => {
-    // Allow empty string for backspace operations
-    if (text === '') {
-      setReps(0);
+    setReps(text);
+    if (text === "") {
+      setRepsError("It cannot be empty!");
     } else {
-      const newReps = parseInt(text) || 0;
-      setReps(newReps);
+      setRepsError("");
     }
   };
 
-  // this is a function that handles the weight change
   const handleWeightChange = (text: string) => {
-    // Allow empty string for backspace operations
-    if (text === '') {
-      setWeight(0);
+    setWeight(text);
+    if (text === "") {
+      setWeightError("It cannot be empty!");
     } else {
-      const newWeight = parseInt(text) || 0;
-      setWeight(newWeight);
+      setWeightError("");
+    }
+  };
+
+  const handleRepsBlur = () => {
+    if (reps === "") {
+      setReps(defaultRepsValue);
+      setRepsError("");
+    }
+  };
+
+  const handleWeightBlur = () => {
+    if (weight === "") {
+      setWeight(defaultWeightValue);
+      setWeightError("");
     }
   };
 
@@ -58,29 +73,46 @@ export function LogRow({ index, isFocused, onSetData }: LogRowProps) {
         <Polygon
           points="30,0 60,15 60,45 30,60 0,45 0,15"
           fill={isFocused ? "orange" : "#343A40"}
-        ></Polygon>
+        />
         <SvgText x="30" y="35" textAnchor="middle" fill="white" fontSize={24}>
           {index}
         </SvgText>
       </Svg>
-      <TextInput
-        style={isFocused ? styles.focused_input : styles.unfocused_input}
-        onChangeText={handleRepsChange}
-        value={reps.toString()}
-        keyboardType="numeric"
-        placeholder="0"
-        placeholderTextColor="#666"
-        selectTextOnFocus={true}
-      />
-      <TextInput
-        style={isFocused ? styles.focused_input : styles.unfocused_input}
-        onChangeText={handleWeightChange}
-        value={weight.toString()}
-        keyboardType="numeric"
-        placeholder="0"
-        placeholderTextColor="#666"
-        selectTextOnFocus={true}
-      />
+      <View style={styles.inputWrapper}>
+        <TextInput
+          style={isFocused ? styles.focused_input : styles.unfocused_input}
+          onChangeText={handleRepsChange}
+          onBlur={handleRepsBlur}
+          value={reps}
+          keyboardType="numeric"
+          placeholder="0"
+          placeholderTextColor="#666"
+          selectTextOnFocus={true}
+        />
+        {repsError !== "" && (
+          <Text style={styles.errorTooltip} numberOfLines={1}>
+            {repsError}
+          </Text>
+        )}
+      </View>
+
+      <View style={styles.inputWrapper}>
+        <TextInput
+          style={isFocused ? styles.focused_input : styles.unfocused_input}
+          onChangeText={handleWeightChange}
+          onBlur={handleWeightBlur}
+          value={weight}
+          keyboardType="numeric"
+          placeholder="0"
+          placeholderTextColor="#666"
+          selectTextOnFocus={true}
+        />
+        {weightError !== "" && (
+          <Text style={styles.errorTooltip} numberOfLines={1}>
+            {weightError}
+          </Text>
+        )}
+      </View>
 
       {isFocused && (
         <>
@@ -100,6 +132,10 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingLeft: 20,
     paddingRight: 20,
+  },
+  inputWrapper: {
+    position: "relative",
+    alignItems: "center",
   },
   focused_input: {
     height: 45,
@@ -122,6 +158,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontWeight: "bold",
     padding: 10,
+  },
+  errorTooltip: {
+    position: "absolute",
+    top: -18,
+    left: -18,
+    // Ensure there's enough width for one line of text:
+    width: 180,
+    color: "red",
+    fontSize: 12,
+    textAlign: "center",
   },
   tooltip1: {
     position: "absolute",
