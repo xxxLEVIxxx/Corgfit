@@ -20,6 +20,7 @@ import { useExercises, Exercise } from "./Context";
 import { useState } from "react";
 import { MuscleGroupFilter } from "@/components/MuscleGroupFilter";
 import { set } from "date-fns";
+import { EXERCISE_DATA } from "../app/Context";
 
 interface ExerciseElement {
   id: number;
@@ -121,8 +122,16 @@ export default function ExerciseSelector() {
   const [selectedExercises, setSelectedExercises] = useState(exerciseList);
   const [filteredExercises, setFilteredExercises] = useState(exerciseList);
   const handleSelectExercise = (exercise: Exercise) => {
-    // Here you'll add the exercise to your workout
-    // For now, just go back
+    const newExercise = {
+      name: exercise.name,
+      sets: exercise.sets,
+      reps: exercise.reps,
+      weight: exercise.weight,
+      id: exercise.id,
+      image: EXERCISE_DATA[exercise.name][1],  // Assuming the 2nd element is the list image.
+      category: EXERCISE_DATA[exercise.name][0], // Assuming the 1st element is the category.
+    };
+
     setExercises(() => [...exercises, exercise]);
     router.back();
   };
@@ -231,7 +240,19 @@ export default function ExerciseSelector() {
         data={selectedExercises}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleSelectExercise(item)}>
+          <TouchableOpacity
+            onPress={() =>
+              handleSelectExercise({
+                ...item,
+                sets: 3, // Default value for sets
+                reps: 10, // Default value for reps
+                weight: 100, // Default value for weight
+                image: typeof EXERCISE_DATA[item.name]?.[1] === "string"
+                  ? { uri: EXERCISE_DATA[item.name][1] }
+                  : EXERCISE_DATA[item.name]?.[1] || require("@/assets/images/List-Images/Calf_Donkey_Raise.png"), // Ensure valid ImageSourcePropType
+              })
+            }
+          >
             <ThemedView style={styles.exerciseItem}>
               <ThemedText style={styles.exerciseName}>{item.name}</ThemedText>
               <ThemedText style={styles.categoryText}>
