@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   View,
@@ -10,6 +10,7 @@ import {
   Platform,
   useWindowDimensions,
   Image,
+  Animated,
 } from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
 import { EXERCISE_DETAILS, EXERCISE_DATA } from "@/app/Context";
@@ -55,6 +56,8 @@ const HowToModalPage = () => {
     { key: "equipment", title: "Equipment" },
   ]);
 
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+
   // Retrieve exercise details using the exerciseName parameter
   const exerciseDetails = exerciseName ? EXERCISE_DETAILS[exerciseName] : undefined;
   const exerciseData = exerciseName ? EXERCISE_DATA[exerciseName] : undefined;
@@ -88,51 +91,61 @@ const HowToModalPage = () => {
     ),
   });
 
+  const handleClose = () => {
+    // Fade out the view before navigating back
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 300, // duration of fade-out in ms
+      useNativeDriver: true,
+    }).start(() => {
+      router.back();
+    });
+  };
+
+
   return (
-    <Modal visible={true} animationType="slide" transparent={false}>
-      <View style={styles.modalContainer}>
-        {/* Close Button */}
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={() => router.back()}
-        >
-          <Text style={styles.closeText}>✖</Text>
-        </TouchableOpacity>
+    <Animated.View style={[styles.modalContainer, { opacity: fadeAnim }]}>
+      {/* Close Button */}
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => router.back()}
+      >
+        <Text style={styles.closeText}>✖</Text>
+      </TouchableOpacity>
 
-        {/* Exercise How-To Image */}
-        <View style={styles.gifContainer}>
-          {exerciseData ? (
-            <Image
-              source={exerciseData[2]} // Use the How-To image from EXERCISE_DATA
-              style={{ width: "100%", height: 200 }}
-            />
-          ) : (
-            <View style={{ width: "100%", height: 200, backgroundColor: "#000" }} />
-          )}
-        </View>
-
-        {/* Exercise Title */}
-        <Text style={styles.title}>{exerciseName}</Text>
-
-        {/* Tab View */}
-        <TabView
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{ width: layout.width }}
-          renderTabBar={(props) => (
-            <TabBar
-              {...props}
-              style={styles.tabBar}
-              indicatorStyle={styles.indicator}
-              activeColor="#fff"
-              inactiveColor="#aaa"
-            />
-          )}
-          style={styles.tabView}
-        />
+      {/* Exercise How-To Image */}
+      <View style={styles.gifContainer}>
+        {exerciseData ? (
+          <Image
+            source={exerciseData[2]} // Use the How-To image from EXERCISE_DATA
+            style={{ width: "100%", height: 200 }}
+          />
+        ) : (
+          <View style={{ width: "100%", height: 200, backgroundColor: "#000" }} />
+        )}
       </View>
-    </Modal>
+
+      {/* Exercise Title */}
+      <Text style={styles.title}>{exerciseName}</Text>
+
+      {/* Tab View */}
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+        renderTabBar={(props) => (
+          <TabBar
+            {...props}
+            style={styles.tabBar}
+            indicatorStyle={styles.indicator}
+            activeColor="#fff"
+            inactiveColor="#aaa"
+          />
+        )}
+        style={styles.tabView}
+      />
+    </Animated.View>
   );
 };
 
