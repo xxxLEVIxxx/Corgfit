@@ -89,7 +89,10 @@ export default function ExerciseList() {
         renderItem={({ item, index }) => (
           <TouchableOpacity
             styles={styles.cardContainer}
-            onPress={() => router.push("/HowToModal")}
+            onPress={() => router.push({
+                pathname: "/HowToModal",
+                params: { exerciseName: item.name },
+              })}
           >
             <ExerciseCard
               {...item}
