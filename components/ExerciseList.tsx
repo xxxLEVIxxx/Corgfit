@@ -19,25 +19,25 @@ import ExerciseCard from './ExerciseCard';
 export default function ExerciseList() {
     const { exercises, setExercises } = useExercises();
     const router = useRouter();
-    
+
     const deleteExercise = (index: number) => {
         setExercises(exercises.filter(exercise => exercise.id !== index));
     }
     const swipeableRefs = useRef<Array<Swipeable | null>>([]);
-  
+
 
     const closeAllSwipeables = (indexToSkip?: number) => {
         swipeableRefs.current.forEach((ref, index) => {
-          if (ref && index !== indexToSkip) {
-            ref.close();
-          }
+            if (ref && index !== indexToSkip) {
+                ref.close();
+            }
         });
-      };
+    };
     const renderRightActions = (
         progress: Animated.AnimatedInterpolation<number>,
         _dragX: Animated.AnimatedInterpolation<number>,
         index: number
-        ) => {
+    ) => {
         const trans = progress.interpolate({
             inputRange: [0, 1],
             outputRange: [80, 0],
@@ -45,25 +45,25 @@ export default function ExerciseList() {
 
         return (
             <View style={styles.deleteActionContainer}>
-            <Animated.View
-                style={[
-                styles.deleteAction,
-                {
-                    transform: [{ translateX: trans }],
-                },
-                ]}
-            >
-                <TouchableOpacity 
-                style={styles.deleteButton} 
-                onPress={() => onDelete(index)}
+                <Animated.View
+                    style={[
+                        styles.deleteAction,
+                        {
+                            transform: [{ translateX: trans }],
+                        },
+                    ]}
                 >
-                <Ionicons name="trash-outline" size={24} color="white" />
-                </TouchableOpacity>
-            </Animated.View>
+                    <TouchableOpacity
+                        style={styles.deleteButton}
+                        onPress={() => onDelete(index)}
+                    >
+                        <Ionicons name="trash-outline" size={24} color="white" />
+                    </TouchableOpacity>
+                </Animated.View>
             </View>
         );
     };
-    
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -76,10 +76,18 @@ export default function ExerciseList() {
             <FlatList
                 data={exercises}
                 keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={styles.listContainer} 
+                contentContainerStyle={styles.listContainer}
                 showsVerticalScrollIndicator={true}
                 renderItem={({ item, index }) => (
-                    <TouchableOpacity styles={styles.cardContainer} onPress={() => router.push('/HowToModal')}>
+                    <TouchableOpacity
+                        style={styles.cardContainer}
+                        onPress={() =>
+                            router.push({
+                                pathname: '/HowToModal',
+                                params: { exerciseName: item.name },
+                            })
+                        }
+                    >
                         <ExerciseCard
                             {...item}
                             isLogged={false}
@@ -92,10 +100,11 @@ export default function ExerciseList() {
                             colorScheme={'dark'}
                         />
                     </TouchableOpacity>
+
                 )}
             />
-                
-            
+
+
         </View>
     );
 }
@@ -117,9 +126,9 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         paddingBottom: 30,
-      },
+    },
     cardContainer: {
-        flexDirection: "row", 
+        flexDirection: "row",
         alignItems: "center",
         backgroundColor: "#1E1E1E",
         marginVertical: 8,
@@ -127,13 +136,13 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     exerciseImage: {
-        width: 50, 
+        width: 50,
         height: 50,
         borderRadius: 10,
-        marginRight: 20, 
+        marginRight: 20,
     },
     textContainer: {
-        flex: 1, 
+        flex: 1,
     },
     exerciseName: {
         fontSize: 16,
@@ -145,5 +154,5 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "gray",
     },
-    
+
 });
