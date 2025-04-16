@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useRouter } from "expo-router";
+import React, { useState, useEffect, useRef } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -10,56 +10,45 @@ import {
   Platform,
   useWindowDimensions,
   Image,
+  Animated,
 } from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
+import { EXERCISE_DETAILS, EXERCISE_DATA } from "@/app/Context";
 
-interface HowToModalProps {
-  visible: boolean;
-  onClose: () => void;
-}
-
-// Instruction Tab Content
-const InstructionTab = () => (
+const InstructionTab: React.FC<{ instructions: string[] }> = ({ instructions }) => (
   <ScrollView style={styles.tabContent}>
-    <Text style={styles.text}>
-      1. Adjust the seat and pad to align with your thighs
-    </Text>
-    <Text style={styles.text}>
-      2. Grip the bar with hands slightly wider than shoulder-width
-    </Text>
-    <Text style={styles.text}>
-      3. Pull the bar down to chest level smoothly
-    </Text>
-    <Text style={styles.text}>
-      4. Squeeze shoulder blades and hold for 1-2 seconds
-    </Text>
+    {instructions.map((step, idx) => (
+      <Text key={idx} style={styles.text}>
+        {idx + 1}. {step}
+      </Text>
+    ))}
   </ScrollView>
 );
 
-// Target Tab Content
-const TargetTab = () => (
+const TargetTab: React.FC<{ primary: string[]; secondary: string[] }> = ({
+  primary,
+  secondary,
+}) => (
   <ScrollView style={styles.tabContent}>
-    <Text style={styles.text}>Primary: Latissimus Dorsi (Lats)</Text>
-    <Text style={styles.text}>Secondary: Biceps, Rhomboids, Traps</Text>
+    <Text style={styles.text}>Primary: {primary.join(", ")}</Text>
+    <Text style={styles.text}>Secondary: {secondary.join(", ")}</Text>
   </ScrollView>
 );
 
-// Equipment Tab Content
-const EquipmentTab = () => (
+const EquipmentTab: React.FC<{ equipment: string[] }> = ({ equipment }) => (
   <ScrollView style={styles.tabContent}>
-    <Text style={styles.text}>Lat Pulldown Machine</Text>
-    <Text style={styles.text}>Adjustable Weights</Text>
+    {equipment.map((item, idx) => (
+      <Text key={idx} style={styles.text}>
+        {item}
+      </Text>
+    ))}
   </ScrollView>
 );
 
-// Define scenes using SceneMap
-const renderScene = SceneMap({
-  instruction: InstructionTab,
-  target: TargetTab,
-  equipment: EquipmentTab,
-});
-
-const HowToModal: React.FC<HowToModalProps> = ({ visible, onClose }) => {
+const HowToModalPage = () => {
+  const { exerciseName } = useLocalSearchParams<{ exerciseName: string }>();
+  const router = useRouter();
+  const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: "instruction", title: "Instruction" },
@@ -67,54 +56,100 @@ const HowToModal: React.FC<HowToModalProps> = ({ visible, onClose }) => {
     { key: "equipment", title: "Equipment" },
   ]);
 
-  const router = useRouter();
-  const layout = useWindowDimensions();
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  return (
-    <Modal visible={visible} animationType="slide" transparent={false}>
+  // Retrieve exercise details using the exerciseName parameter
+  const exerciseDetails = exerciseName ? EXERCISE_DETAILS[exerciseName] : undefined;
+  const exerciseData = exerciseName ? EXERCISE_DATA[exerciseName] : undefined;
+
+  if (!exerciseName || !exerciseDetails) {
+    return (
       <View style={styles.modalContainer}>
-        {/* Close Button */}
         <TouchableOpacity
           style={styles.closeButton}
           onPress={() => router.back()}
         >
           <Text style={styles.closeText}>✖</Text>
         </TouchableOpacity>
+        <Text style={styles.title}>Exercise not found</Text>
+      </View>
+    );
+  }
 
-        {/* Embedded Video Placeholder (Change if using WebView) */}
-        <View style={styles.gifContainer}>
+  const renderScene = SceneMap({
+    instruction: () => (
+      <InstructionTab instructions={exerciseDetails.instruction} />
+    ),
+    target: () => (
+      <TargetTab
+        primary={exerciseDetails.target.primary}
+        secondary={exerciseDetails.target.secondary}
+      />
+    ),
+    equipment: () => (
+      <EquipmentTab equipment={exerciseDetails.equipment} />
+    ),
+  });
+
+  const handleClose = () => {
+    // Fade out the view before navigating back
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 300, // duration of fade-out in ms
+      useNativeDriver: true,
+    }).start(() => {
+      router.back();
+    });
+  };
+
+
+  return (
+    <Animated.View style={[styles.modalContainer, { opacity: fadeAnim }]}>
+      {/* Close Button */}
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => router.back()}
+      >
+        <Text style={styles.closeText}>✖</Text>
+      </TouchableOpacity>
+
+      {/* Exercise How-To Image */}
+      <View style={styles.gifContainer}>
+        {exerciseData ? (
           <Image
-            source={require("@/assets/images/How-To-Images/Back_HT_Pull_Ups.png")}
+            source={exerciseData[2]} // Use the How-To image from EXERCISE_DATA
             style={{ width: "100%", height: 200 }}
           />
-        </View>
-
-        {/* Exercise Title */}
-        <Text style={styles.title}>Lat Pulldown</Text>
-
-        {/* Tab View */}
-        <TabView
-          navigationState={{ index, routes }}
-          renderScene={renderScene}
-          onIndexChange={setIndex}
-          initialLayout={{ width: layout.width }}
-          renderTabBar={(props) => (
-            <TabBar
-              {...props}
-              style={styles.tabBar}
-              indicatorStyle={styles.indicator}
-              activeColor="#fff"
-              inactiveColor="#aaa"
-            />
-          )}
-          style={styles.tabView}
-        />
+        ) : (
+          <View style={{ width: "100%", height: 200, backgroundColor: "#000" }} />
+        )}
       </View>
-    </Modal>
+
+      {/* Exercise Title */}
+      <Text style={styles.title}>{exerciseName}</Text>
+
+      {/* Tab View */}
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+        renderTabBar={(props) => (
+          <TabBar
+            {...props}
+            style={styles.tabBar}
+            indicatorStyle={styles.indicator}
+            activeColor="#fff"
+            inactiveColor="#aaa"
+          />
+        )}
+        style={styles.tabView}
+      />
+    </Animated.View>
   );
 };
 
-export default HowToModal;
+export default HowToModalPage;
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -167,19 +202,6 @@ const styles = StyleSheet.create({
       },
       web: {
         height: 48,
-      },
-    }),
-  },
-  tabLabel: {
-    fontSize: 16,
-    fontWeight: "600",
-    ...Platform.select({
-      ios: {
-        padding: 8,
-        margin: 0,
-      },
-      web: {
-        margin: 8,
       },
     }),
   },
