@@ -172,7 +172,10 @@ export default function Log() {
             <Text style={styles.title}>{exerciseName || "Exercise"}</Text>
             <Pressable
               style={styles.howto}
-              onPress={() => router.push("/HowToModal")}
+              onPress={() => router.push({
+                pathname: "/HowToModal",
+                params: { exerciseName: exerciseName },
+              })}
             >
               <MaterialIcons name="play-arrow" size={24} color="white" />
               <Text style={styles.text}>How To</Text>

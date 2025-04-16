@@ -4,8 +4,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
-  Modal,
   FlatList,
   Animated,
 } from "react-native";
