@@ -22,15 +22,7 @@ export function LogForm({
 }: LogFormProps) {
   const [sets, setSets] = useState(3);
   const rows = [];
-  // this is a loop that creates the rows for the log form
-  for (let i = 2; i <= sets; i++) {
-    rows.push(
-      <React.Fragment key={i}>
-        <View style={styles.line}></View>
-        <LogRow index={i} isFocused={i === currentSet} onSetData={onSetLogged} />
-      </React.Fragment>
-    );
-  }
+  // this26
 
   // this is a function that adds a set to the log form
   const handleAddSet = () => {
@@ -60,7 +52,12 @@ export function LogForm({
       <View style={styles.row}></View>
 
       {/* this is the first row of the log form */}
-      <LogRow index={1} isFocused={1 === currentSet} key={1} onSetData={onSetLogged} />
+      <LogRow
+        index={1}
+        isFocused={1 === currentSet}
+        key={1}
+        onSetData={onSetLogged}
+      />
 
       {/* this is a loop that creates the rows for the log form */}
       {rows}
