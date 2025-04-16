@@ -91,27 +91,27 @@ export default function Log() {
     const currentSetData = updatedLoggedSets.find(set => set.setNumber === currentSet);
     
     // List of exercises where 0 weight is valid (bodyweight exercises)
-    const bodyweightExercises = [  "Plank",
-      "Pull Ups",
-      "Push Ups",
-      "Jump Rope",
-      "Bicycle Crunch",
-      "Leg Raise",
-      "Mountain Climbers",
-      "Russian Twist",
-      "Glute Bridge",
-      "Step Up",
-      "Split Squat",
-      "Walking Lunge",
-      "Lunges",
-      "Leg Split Squat",
-      "Tricep Dips"];
+    // const bodyweightExercises = [  "Plank",
+    //   "Pull Ups",
+    //   "Push Ups",
+    //   "Jump Rope",
+    //   "Bicycle Crunch",
+    //   "Leg Raise",
+    //   "Mountain Climbers",
+    //   "Russian Twist",
+    //   "Glute Bridge",
+    //   "Step Up",
+    //   "Split Squat",
+    //   "Walking Lunge",
+    //   "Lunges",
+    //   "Leg Split Squat",
+    //   "Tricep Dips"];
     
-    // Validate weight for non-bodyweight exercises
-    if (!bodyweightExercises.includes(exerciseName) && currentSetData && currentSetData.weight === 0) {
-      alert(`Weight cannot be 0 for ${exerciseName}`);
-      return;
-    }
+    // // Validate weight for non-bodyweight exercises
+    // if (!bodyweightExercises.includes(exerciseName) && currentSetData && currentSetData.weight === 0) {
+    //   alert(`Weight cannot be 0 for ${exerciseName}`);
+    //   return;
+    // }
 
     // Update the exercise's logged status in the context
     setExercises((currentExercises) => {

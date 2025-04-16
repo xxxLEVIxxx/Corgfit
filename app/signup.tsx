@@ -11,6 +11,10 @@ export default function SignUp() {
     const [email, setEmail] = useState('');
     const [confirm, setConfirm] = useState('');
     const [correct, setCorrect] = useState(true);
+    const [passwdError, setPasswdError] = useState('');
+    const [confirmError, setConfirmError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const [index, setIndex] = useState(0);
     const [startAnimation, setStartAnimation] = useState(false);
@@ -21,12 +25,21 @@ export default function SignUp() {
     const router = useRouter();
 
     const handleSignUp = () => {
+      // Validate password requirements
+      const error = validatePassword(passwd);
+      if (error) {
+        setPasswdError(error);
+        setCorrect(false);
+        return;
+      }
+      
+      // Validate password matching
       if (passwd !== confirm) {
+        setConfirmError("Passwords do not match! Please re-enter.");
         setCorrect(false);
       } else {
-
-        // router.back();
-        router.replace('/survey')
+        // All validation passed
+        router.replace('/survey');
       }
     }
 
@@ -44,6 +57,18 @@ export default function SignUp() {
       setStartAnimation(false);
     }
 
+    const validatePassword = (password: string) => {
+      if (password.length < 8) {
+        return "Password must be at least 8 characters";
+      }
+      if (!/[A-Z]/.test(password)) {
+        return "Password must contain at least one capital letter";
+      }
+      if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        return "Password must contain at least one special character";
+      }
+      return "";
+    };
 
     const images = [
       require('../assets/images/corgi-1.png'),
@@ -81,7 +106,28 @@ export default function SignUp() {
       };
     }, [reverseAnimation, index]);
       
+    const handlePasswordChange = (text: string) => {
+      setPasswd(text);
+      const error = validatePassword(text);
+      setPasswdError(error);
       
+      // Clear the match error when editing either password field
+      setConfirmError("");
+      setCorrect(true); // Reset general error state when editing
+    };
+
+    const handleConfirmChange = (text: string) => {
+      setConfirm(text);
+      // Clear errors while typing in confirm field
+      setConfirmError("");
+      setCorrect(true); // Reset general error state when editing
+    };
+    
+    const handleConfirmBlur = () => {
+      // Don't show errors on blur - only on signup button click
+      // This ensures consistent behavior
+    };
+
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
@@ -91,16 +137,61 @@ export default function SignUp() {
             <Text style={styles.title}>CORGFIT</Text>
 
             <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} placeholderTextColor="#888" />
-            <TextInput placeholder="Password" style={styles.input} value={passwd} onChangeText={setPasswd} placeholderTextColor="#888" secureTextEntry onFocus={handleFocus} onBlur={handleBlur}/>
-            <TextInput placeholder="Confirm your password" style={styles.input} value={confirm} onChangeText={setConfirm} placeholderTextColor="#888" secureTextEntry />
+            
+            <View style={styles.passwordContainer}>
+              <TextInput 
+                placeholder="Password" 
+                style={styles.passwordInput} 
+                value={passwd} 
+                onChangeText={handlePasswordChange} 
+                placeholderTextColor="#888" 
+                secureTextEntry={!showPassword} 
+                onFocus={handleFocus} 
+                onBlur={handleBlur}
+              />
+              <TouchableOpacity 
+                style={styles.eyeIcon} 
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <FontAwesome 
+                  name={showPassword ? "eye" : "eye-slash"} 
+                  size={20} 
+                  color="#666" 
+                />
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.passwordContainer}>
+              <TextInput 
+                placeholder="Confirm your password" 
+                style={styles.passwordInput} 
+                value={confirm} 
+                onChangeText={handleConfirmChange} 
+                onBlur={handleConfirmBlur}
+                placeholderTextColor="#888" 
+                secureTextEntry={!showConfirmPassword} 
+              />
+              <TouchableOpacity 
+                style={styles.eyeIcon} 
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                <FontAwesome 
+                  name={showConfirmPassword ? "eye" : "eye-slash"} 
+                  size={20} 
+                  color="#666" 
+                />
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity style={styles.loginButton} onPress={handleSignUp}>
                 <Text style={styles.loginButtonText}>Sign up</Text>
             </TouchableOpacity>
 
-            {!correct && <Text style={styles.errorText}> Passwords do not match! Please try again. </Text>}
-
-        
+            {(!correct || passwdError || confirmError) && (
+              <Text style={styles.errorText}>
+                {passwdError || confirmError || "Passwords do not match! Please re-enter."}
+              </Text>
+            )}
         </View>
     );
 }
@@ -168,5 +259,24 @@ const styles = StyleSheet.create({
   errorText: {
       color: 'red',
       marginBottom: 15,
+  },
+  passwordContainer: {
+    width: '80%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
+    marginBottom: 20,
+  },
+  passwordInput: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 12,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 15,
+    height: '100%',
+    justifyContent: 'center',
   },
 });
