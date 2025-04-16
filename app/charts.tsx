@@ -67,7 +67,7 @@ export default function charts() {
     backgroundGradientFrom: "#212529",
     backgroundGradientTo: "#212529",
     decimalPlaces: 0,
-    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    color: () => `#FFFFFF`,
     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
   };
   return (
@@ -92,6 +92,10 @@ export default function charts() {
           chartConfig={chartConfig}
           bezier // Makes line curved
           style={styles.linechart}
+          withInnerLines={false}
+          withOuterLines={false}
+          withDots={false}
+          withShadow={false}
         />
       </View>
       <View style={styles.row}>
@@ -152,7 +156,7 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingHorizontal: 35,
     backgroundColor: "#212529",
-    paddingTop: 50,
+    paddingTop: 80,
   },
   title: {
     color: "white",
@@ -160,6 +164,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "bold",
     fontFamily: "RobotoSlab_700Bold",
+    marginTop: 20,
   },
   loseWeight: {
     color: "green",
@@ -167,6 +172,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "RobotoSlab_700Bold",
     alignSelf: "flex-start",
+    marginTop: 20,
   },
   gainWeight: {
     color: "#FE3903",
@@ -174,12 +180,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "RobotoSlab_700Bold",
     alignSelf: "flex-start",
+    marginTop: 10,
   },
 
   chartWrapper: {
     borderRadius: 16,
     paddingRight: 25,
-    marginTop: 20,
+    marginTop: 50,
   },
   row: {
     flexDirection: "row",

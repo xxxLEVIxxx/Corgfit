@@ -1,76 +1,85 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import { useRouter } from 'expo-router';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
+import { useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 
 const SurveyScreen = () => {
   const router = useRouter();
-
+  const { email } = useLocalSearchParams();
   // Step control (1 = Basic Info, 2 = Workout Preferences)
   const [step, setStep] = useState(1);
 
   // Basic Info
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [birth, setBirth] = useState('');
-  const [height, setHeight] = useState('');
-  const [weight, setWeight] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [birth, setBirth] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
 
   // Gender Dropdown
   const [gender, setGender] = useState(null);
   const [genderOpen, setGenderOpen] = useState(false);
   const [genderItems, setGenderItems] = useState([
-    { label: 'Male', value: 'male' },
-    { label: 'Female', value: 'female' },
-    { label: 'Other', value: 'other' },
+    { label: "Male", value: "male" },
+    { label: "Female", value: "female" },
+    { label: "Other", value: "other" },
   ]);
 
   // Workout Experience Dropdown
   const [experience, setExperience] = useState(null);
   const [experienceOpen, setExperienceOpen] = useState(false);
   const [experienceItems, setExperienceItems] = useState([
-    { label: 'Beginner', value: 'beginner' },
-    { label: 'Intermediate', value: 'intermediate' },
-    { label: 'Advanced', value: 'advanced' },
+    { label: "Beginner", value: "beginner" },
+    { label: "Intermediate", value: "intermediate" },
+    { label: "Advanced", value: "advanced" },
   ]);
 
   // Workout Target (Goal) Dropdown
   const [workoutGoal, setWorkoutGoal] = useState(null);
   const [goalOpen, setGoalOpen] = useState(false);
   const [goalItems, setGoalItems] = useState([
-    { label: 'Build Muscle', value: 'muscle' },
-    { label: 'Lose Weight', value: 'weight_loss' },
-    { label: 'Improve Fitness', value: 'fitness' },
+    { label: "Build Muscle", value: "muscle" },
+    { label: "Lose Weight", value: "weight_loss" },
+    { label: "Improve Fitness", value: "fitness" },
   ]);
 
   // Weekly Activity Days
   const [activity, setActivity] = useState(null);
   const [activityOpen, setActivityOpen] = useState(false);
   const [activityItems, setActivityItems] = useState([
-    { label: '0 days', value: 0 },
-    { label: '1-2 days', value: 1 },
-    { label: '3-4 days', value: 2 },
-    { label: '5-6 days', value: 3 },
-    { label: '7 days', value: 4 },
+    { label: "0 days", value: 0 },
+    { label: "1-2 days", value: 1 },
+    { label: "3-4 days", value: 2 },
+    { label: "5-6 days", value: 3 },
+    { label: "7 days", value: 4 },
   ]);
 
   // Intensity
   const [intensity, setIntensity] = useState(null);
   const [intensityOpen, setIntensityOpen] = useState(false);
   const [intensityItems, setIntensityItems] = useState([
-    { label: 'Light', value: 'light' },
-    { label: 'Moderate', value: 'moderate' },
-    { label: 'Intense', value: 'intense' },
+    { label: "Light", value: "light" },
+    { label: "Moderate", value: "moderate" },
+    { label: "Intense", value: "intense" },
   ]);
 
   // Sedentary hours
   const [sedentary, setSedentary] = useState(null);
   const [sedentaryOpen, setSedentaryOpen] = useState(false);
   const [sedentaryItems, setSedentaryItems] = useState([
-    { label: 'Less than 2 hours', value: 0 },
-    { label: '2-4 hours', value: 1 },
-    { label: '4-6 hours', value: 2 },
-    { label: '6+ hours', value: 3 },
+    { label: "Less than 2 hours", value: 0 },
+    { label: "2-4 hours", value: 1 },
+    { label: "4-6 hours", value: 2 },
+    { label: "6+ hours", value: 3 },
   ]);
 
   // Close dropdowns when typing or tapping outside
@@ -95,16 +104,68 @@ const SurveyScreen = () => {
       gender,
       workoutExperience: experience,
       workoutTarget: workoutGoal,
+      weeklyActivityDays: activity,
+      activityIntensity: intensity,
+      dailySedentaryHours: sedentary,
     };
 
     console.log("Survey Data:", surveyData);
-    router.replace('/(tabs)/dashboard');
+    router.replace("/(tabs)/dashboard");
+  };
+
+  const handleSubmit2 = async () => {
+    const surveyData = {
+      firstName,
+      lastName,
+      birth,
+      height,
+      weight,
+      gender,
+      workoutExperience: experience,
+      workoutTarget: workoutGoal,
+      weeklyActivityDays: activity,
+      activityIntensity: intensity,
+      dailySedentaryHours: sedentary,
+    };
+    console.log("Email:", email);
+    console.log("Survey Data:", surveyData);
+    try {
+      const res = await fetch("http://192.168.0.141:8095/signup/form/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email, // make sure this is defined from signup
+          survey: surveyData, // survey object
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        console.log("Survey Data Submitted:", data.message);
+        router.replace("/(tabs)/dashboard");
+      } else {
+        console.warn("Survey submission failed:", data.message);
+      }
+    } catch (error) {
+      console.error("Error submitting survey data:", error);
+    }
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); closeDropdowns(); }} accessible={false}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+        closeDropdowns();
+      }}
+      accessible={false}
+    >
       <View style={styles.container}>
-        <Text style={styles.title}>User Survey {step === 1 ? '- Step 1' : '- Step 2'}</Text>
+        <Text style={styles.title}>
+          User Survey {step === 1 ? "- Step 1" : "- Step 2"}
+        </Text>
 
         {/* Step 1: Basic Info */}
         {step === 1 && (
@@ -210,8 +271,14 @@ const SurveyScreen = () => {
                 style={styles.dropdown}
                 textStyle={styles.dropdownText}
                 placeholderStyle={styles.placeholderStyle}
-                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 5000 }]}
-                onOpen={() => {closeDropdowns(); setExperienceOpen(true);}}
+                dropDownContainerStyle={[
+                  styles.dropdownOpenContainer,
+                  { zIndex: 5000 },
+                ]}
+                onOpen={() => {
+                  closeDropdowns();
+                  setExperienceOpen(true);
+                }}
               />
             </View>
 
@@ -228,8 +295,14 @@ const SurveyScreen = () => {
                 style={styles.dropdown}
                 textStyle={styles.dropdownText}
                 placeholderStyle={styles.placeholderStyle}
-                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 4000 }]}
-                onOpen={() => {closeDropdowns(); setGoalOpen(true);}}
+                dropDownContainerStyle={[
+                  styles.dropdownOpenContainer,
+                  { zIndex: 4000 },
+                ]}
+                onOpen={() => {
+                  closeDropdowns();
+                  setGoalOpen(true);
+                }}
               />
             </View>
 
@@ -246,8 +319,14 @@ const SurveyScreen = () => {
                 style={styles.dropdown}
                 textStyle={styles.dropdownText}
                 placeholderStyle={styles.placeholderStyle}
-                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 3000 }]}
-                onOpen={() => {closeDropdowns(); setActivityOpen(true);}}
+                dropDownContainerStyle={[
+                  styles.dropdownOpenContainer,
+                  { zIndex: 3000 },
+                ]}
+                onOpen={() => {
+                  closeDropdowns();
+                  setActivityOpen(true);
+                }}
               />
             </View>
 
@@ -264,8 +343,14 @@ const SurveyScreen = () => {
                 style={styles.dropdown}
                 textStyle={styles.dropdownText}
                 placeholderStyle={styles.placeholderStyle}
-                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 2000 }]}
-                onOpen={() => {closeDropdowns(); setIntensityOpen(true);}}
+                dropDownContainerStyle={[
+                  styles.dropdownOpenContainer,
+                  { zIndex: 2000 },
+                ]}
+                onOpen={() => {
+                  closeDropdowns();
+                  setIntensityOpen(true);
+                }}
               />
             </View>
 
@@ -282,13 +367,18 @@ const SurveyScreen = () => {
                 style={styles.dropdown}
                 textStyle={styles.dropdownText}
                 placeholderStyle={styles.placeholderStyle}
-                dropDownContainerStyle={[styles.dropdownOpenContainer, { zIndex: 1000 }]}
-                onOpen={() => {closeDropdowns(); setSedentaryOpen(true);}}
+                dropDownContainerStyle={[
+                  styles.dropdownOpenContainer,
+                  { zIndex: 1000 },
+                ]}
+                onOpen={() => {
+                  closeDropdowns();
+                  setSedentaryOpen(true);
+                }}
               />
             </View>
 
-
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit2}>
               <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
           </View>
@@ -300,20 +390,19 @@ const SurveyScreen = () => {
 
 export default SurveyScreen;
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1E1E1E',
+    backgroundColor: "#1E1E1E",
     padding: 20,
     marginTop: 50,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 30,
-    textAlign: 'center',
-    color: '#fff',
+    textAlign: "center",
+    color: "#fff",
   },
   content: {
     flex: 1,
@@ -324,38 +413,38 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: '#fff',
+    color: "#fff",
   },
   input: {
-    backgroundColor: '#1C1F24',
+    backgroundColor: "#1C1F24",
     borderWidth: 1,
-    borderColor: '#333',
+    borderColor: "#333",
     borderRadius: 5,
     padding: 12,
-    color: '#fff',
+    color: "#fff",
   },
   dropdown: {
-    backgroundColor: '#1C1F24',
-    borderColor: '#333',
+    backgroundColor: "#1C1F24",
+    borderColor: "#333",
   },
   dropdownOpenContainer: {
-    backgroundColor: '#1C1F24',
-    borderColor: '#333',
+    backgroundColor: "#1C1F24",
+    borderColor: "#333",
   },
   dropdownText: {
-    color: '#fff',
+    color: "#fff",
   },
   placeholderStyle: {
-    color: '#999',
+    color: "#999",
   },
   button: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 50,
-    width: '80%',
+    width: "80%",
     backgroundColor: "#FF9800",
     paddingVertical: 15,
     alignItems: "center",
-    alignSelf: 'center',
+    alignSelf: "center",
     borderRadius: 10,
   },
   buttonText: {
