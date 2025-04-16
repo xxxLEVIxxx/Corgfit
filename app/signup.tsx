@@ -15,6 +15,7 @@ export default function SignUp() {
     const [confirmError, setConfirmError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [isAnyPasswordFieldFocused, setIsAnyPasswordFieldFocused] = useState(false);
 
     const [index, setIndex] = useState(0);
     const [startAnimation, setStartAnimation] = useState(false);
@@ -43,13 +44,33 @@ export default function SignUp() {
       }
     }
 
-    const handleFocus = () => {
-      setStartAnimation(true);
-      setReverseAnimation(false)
-      setIndex(0);
+    const handlePasswordFocus = () => {
+      if (!isAnyPasswordFieldFocused) {
+        // Only start animation if no password field was focused before
+        setIsAnyPasswordFieldFocused(true);
+        setStartAnimation(true);
+        setReverseAnimation(false);
+        setIndex(0);
+      }
     }
 
-    const handleBlur = () => {
+    const handlePasswordBlur = () => {
+      // We need to delay this check since React Native blur happens before focus
+      setTimeout(() => {
+        // If the flag has been set to false by another handler, run the animation
+        if (!isAnyPasswordFieldFocused) {
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+          }
+          setReverseAnimation(true);
+          setStartAnimation(false);
+        }
+      }, 50);
+    }
+
+    const handleEmailFocus = () => {
+      // Always set the flag to false when email is focused
+      setIsAnyPasswordFieldFocused(false);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
@@ -136,7 +157,14 @@ export default function SignUp() {
             <Image source={images[index]} style={styles.logo} />
             <Text style={styles.title}>CORGFIT</Text>
 
-            <TextInput placeholder="Email" style={styles.input} value={email} onChangeText={setEmail} placeholderTextColor="#888" />
+            <TextInput 
+              placeholder="Email" 
+              style={styles.input} 
+              value={email} 
+              onChangeText={setEmail} 
+              placeholderTextColor="#888"
+              onFocus={handleEmailFocus}
+            />
             
             <View style={styles.passwordContainer}>
               <TextInput 
@@ -146,8 +174,8 @@ export default function SignUp() {
                 onChangeText={handlePasswordChange} 
                 placeholderTextColor="#888" 
                 secureTextEntry={!showPassword} 
-                onFocus={handleFocus} 
-                onBlur={handleBlur}
+                onFocus={handlePasswordFocus} 
+                onBlur={handlePasswordBlur}
               />
               <TouchableOpacity 
                 style={styles.eyeIcon} 
@@ -167,7 +195,11 @@ export default function SignUp() {
                 style={styles.passwordInput} 
                 value={confirm} 
                 onChangeText={handleConfirmChange} 
-                onBlur={handleConfirmBlur}
+                onBlur={() => {
+                  handlePasswordBlur();
+                  handleConfirmBlur();
+                }}
+                onFocus={handlePasswordFocus}
                 placeholderTextColor="#888" 
                 secureTextEntry={!showConfirmPassword} 
               />
