@@ -28,9 +28,48 @@ export default function Login() {
 
   const router = useRouter();
 
-  const handleLogIn = () => {
-    // check log in here
-    router.replace("/dashboard");
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:8092/login/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({ email: email})
+      })
+      console.log(response)
+      if(!response.ok) {
+        alert("Email not found!")
+      } else {
+        try {
+          const response = await fetch('http://localhost:8092/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({ email: email, password: passwd})
+          })
+          if (!response.ok) {
+            alert('Incorrect email or password. Please try again.')
+          } else {
+            // alert('login successfully!')
+            const _ = await fetch(`http://localhost:8092/login/record/${email}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+              },
+            })
+            router.replace("/dashboard");
+          }
+        } catch(error: unknown) {
+          console.error(error)
+        }
+      }
+    }
+    catch(error: unknown) {
+      console.error(error)
+    }
+    
   };
 
   const handleFocus = () => {
@@ -107,10 +146,10 @@ export default function Login() {
         onBlur={handleBlur}
       />
 
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogIn}>
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.loginButtonText}>Log in</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.googleButton}>
+      <TouchableOpacity style={styles.googleButton} onPress={ () => router.replace('http://localhost:8092/login/google')}>
         <FontAwesome name="google" size={30} color="#fff" />
       </TouchableOpacity>
 
