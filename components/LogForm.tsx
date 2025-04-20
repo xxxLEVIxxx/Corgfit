@@ -23,7 +23,18 @@ export function LogForm({
   const [sets, setSets] = useState(3);
   const rows = [];
   // this26
-
+  for (let i = 2; i <= sets; i++) {
+    rows.push(
+      <React.Fragment key={i}>
+        <View style={styles.line}></View>
+        <LogRow
+          index={i}
+          isFocused={i === currentSet}
+          onSetData={onSetLogged}
+        />
+      </React.Fragment>
+    );
+  }
   // this is a function that adds a set to the log form
   const handleAddSet = () => {
     if (sets < 6) {

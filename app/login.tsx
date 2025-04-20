@@ -28,50 +28,53 @@ export default function Login() {
 
   const router = useRouter();
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch('http://localhost:8092/login/check', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({ email: email})
-      })
-      console.log(response)
-      if(!response.ok) {
-        alert("Email not found!")
-      } else {
-        try {
-          const response = await fetch('http://localhost:8092/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({ email: email, password: passwd})
-          })
-          if (!response.ok) {
-            alert('Incorrect email or password. Please try again.')
-          } else {
-            // alert('login successfully!')
-            const _ = await fetch(`http://localhost:8092/login/record/${email}`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-              },
-            })
-            router.replace("/dashboard");
-          }
-        } catch(error: unknown) {
-          console.error(error)
-        }
-      }
-    }
-    catch(error: unknown) {
-      console.error(error)
-    }
-    
-  };
+  // const handleLogin = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:8092/login/check', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/x-www-form-urlencoded'
+  //       },
+  //       body: new URLSearchParams({ email: email})
+  //     })
+  //     console.log(response)
+  //     if(!response.ok) {
+  //       alert("Email not found!")
+  //     } else {
+  //       try {
+  //         const response = await fetch('http://localhost:8092/login', {
+  //           method: 'POST',
+  //           headers: {
+  //             'Content-Type': 'application/x-www-form-urlencoded'
+  //           },
+  //           body: new URLSearchParams({ email: email, password: passwd})
+  //         })
+  //         if (!response.ok) {
+  //           alert('Incorrect email or password. Please try again.')
+  //         } else {
+  //           // alert('login successfully!')
+  //           const _ = await fetch(`http://localhost:8092/login/record/${email}`, {
+  //             method: 'POST',
+  //             headers: {
+  //               'Content-Type': 'application/x-www-form-urlencoded'
+  //             },
+  //           })
+  //           router.replace("/dashboard");
+  //         }
+  //       } catch(error: unknown) {
+  //         console.error(error)
+  //       }
+  //     }
+  //   }
+  //   catch(error: unknown) {
+  //     console.error(error)
+  //   }
 
+  // };
+  const handleLogin = () => {
+    // check log in here
+    router.replace("/dashboard");
+  };
   const handleFocus = () => {
     setStartAnimation(true);
     setReverseAnimation(false);
@@ -124,9 +127,12 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      
       <Image source={images[index]} style={styles.logo} />
-      {fontsLoaded? (<Text style={styles.title}> CORGFIT</Text>) : (<ActivityIndicator size="large" color="#0000ff"/>)}
+      {fontsLoaded ? (
+        <Text style={styles.title}> CORGFIT</Text>
+      ) : (
+        <ActivityIndicator size="large" color="#0000ff" />
+      )}
 
       <TextInput
         placeholder="Email"
@@ -149,7 +155,10 @@ export default function Login() {
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
         <Text style={styles.loginButtonText}>Log in</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.googleButton} onPress={ () => router.replace('http://localhost:8092/login/google')}>
+      <TouchableOpacity
+        style={styles.googleButton}
+        onPress={() => router.replace("http://localhost:8092/login/google")}
+      >
         <FontAwesome name="google" size={30} color="#fff" />
       </TouchableOpacity>
 
