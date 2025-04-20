@@ -79,33 +79,30 @@ export default function ExerciseList() {
         </TouchableOpacity>
       </View>
 
-      <FlatList
-        data={exercises}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.listContainer}
-        showsVerticalScrollIndicator={true}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity
-            styles={styles.cardContainer}
-            onPress={() => router.push({
-                pathname: "/HowToModal",
-                params: { exerciseName: item.name },
-              })}
-          >
-            <ExerciseCard
-              {...item}
-              isLogged={false}
-              onDelete={deleteExercise}
-              swipeableRef={(ref) => (swipeableRefs.current[index] = ref)}
-              index={index}
-              details={`${item.sets} Sets • ${item.reps} Reps • ${item.weight} lb`}
-              onSwipeableOpen={closeAllSwipeables}
-              onSwipeableWillOpen={closeAllSwipeables}
-              colorScheme={"dark"}
-            />
-          </TouchableOpacity>
-        )}
-      />
+      {exercises.map((item, idx) => (
+        <TouchableOpacity
+          key={item.id}
+          styles={styles.cardContainer}
+          onPress={() =>
+            router.push({
+              pathname: "/HowToModal",
+              params: { exerciseName: item.name },
+            })
+          }
+        >
+          <ExerciseCard
+            {...item}
+            isLogged={false}
+            onDelete={deleteExercise}
+            swipeableRef={(ref) => (swipeableRefs.current[idx] = ref)}
+            index={idx}
+            details={`${item.sets} Sets • ${item.reps} Reps • ${item.weight} lb`}
+            onSwipeableOpen={closeAllSwipeables}
+            onSwipeableWillOpen={closeAllSwipeables}
+            colorScheme={"dark"}
+          />
+        </TouchableOpacity>
+      ))}
     </View>
   );
 }
