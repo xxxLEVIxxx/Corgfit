@@ -129,29 +129,35 @@ const SurveyScreen = () => {
     };
     console.log("Email:", email);
     console.log("Survey Data:", surveyData);
-    try {
-      const res = await fetch("http://192.168.0.141:8095/signup/form/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email, // make sure this is defined from signup
-          survey: surveyData, // survey object
-        }),
-      });
+    // try {
+    //   const res = await fetch("http://192.168.0.141:8095/signup/form/", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       email: email, // make sure this is defined from signup
+    //       survey: surveyData, // survey object
+    //     }),
+    //   });
 
-      const data = await res.json();
+    //   const data = await res.json();
 
-      if (res.ok && data.success) {
-        console.log("Survey Data Submitted:", data.message);
-        router.replace("/(tabs)/dashboard");
-      } else {
-        console.warn("Survey submission failed:", data.message);
-      }
-    } catch (error) {
-      console.error("Error submitting survey data:", error);
-    }
+    //   if (res.ok && data.success) {
+    //     console.log("Survey Data Submitted:", data.message);
+    //     router.replace("/(tabs)/dashboard");
+    //   } else {
+    //     console.warn("Survey submission failed:", data.message);
+    //   }
+    // } catch (error) {
+    //   console.error("Error submitting survey data:", error);
+    // }
+
+    // Simulate a successful submission
+    setTimeout(() => {
+      console.log("Survey Data Submitted:", surveyData);
+      router.replace("/(tabs)/dashboard");
+    }, 500);
   };
 
   return (

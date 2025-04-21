@@ -38,7 +38,8 @@ export default function SignUp() {
   const [index, setIndex] = useState(0);
   const [startAnimation, setStartAnimation] = useState(false);
   const [reverseAnimation, setReverseAnimation] = useState(false);
-  const [isAnyPasswordFieldFocused, setIsAnyPasswordFieldFocused] = useState(false);
+  const [isAnyPasswordFieldFocused, setIsAnyPasswordFieldFocused] =
+    useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const images = [
@@ -91,7 +92,7 @@ export default function SignUp() {
 
   useEffect(() => {
     if (startAnimation && index < images.length - 1) {
-      timeoutRef.current = setTimeout(() => setIndex(i => i + 1), 80);
+      timeoutRef.current = setTimeout(() => setIndex((i) => i + 1), 80);
     } else if (startAnimation && index === images.length - 1) {
       setStartAnimation(false);
     }
@@ -100,7 +101,7 @@ export default function SignUp() {
 
   useEffect(() => {
     if (reverseAnimation && index > 0) {
-      timeoutRef.current = setTimeout(() => setIndex(i => i - 1), 80);
+      timeoutRef.current = setTimeout(() => setIndex((i) => i - 1), 80);
     } else if (reverseAnimation && index === 0) {
       setReverseAnimation(false);
     }
@@ -141,29 +142,35 @@ export default function SignUp() {
       return;
     }
 
-    // server call
-    try {
-      const res = await fetch("http://192.168.0.141:8095/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password: passwd }),
-      });
-      const data = await res.json();
+    // // server call
+    // try {
+    //   const res = await fetch("http://192.168.0.141:8095/signup", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({ email, password: passwd }),
+    //   });
+    //   const data = await res.json();
 
-      if (!res.ok || !data.success) {
-        setServerError(data.message || "Signup failed. Please try again.");
-        setLoading(false);
-        return;
-      }
+    //   if (!res.ok || !data.success) {
+    //     setServerError(data.message || "Signup failed. Please try again.");
+    //     setLoading(false);
+    //     return;
+    //   }
 
-      // all good → navigate
+    //   // all good → navigate
+    //   setLoading(false);
+    //   router.replace({ pathname: "/survey", params: { email } });
+    // } catch (err) {
+    //   console.error("Signup error:", err);
+    //   setServerError("Network error. Please try again.");
+    //   setLoading(false);
+    // }
+
+    // Simulate a successful signup
+    setTimeout(() => {
       setLoading(false);
       router.replace({ pathname: "/survey", params: { email } });
-    } catch (err) {
-      console.error("Signup error:", err);
-      setServerError("Network error. Please try again.");
-      setLoading(false);
-    }
+    }, 500);
   };
 
   if (!fontsLoaded) {
@@ -172,7 +179,10 @@ export default function SignUp() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => router.back()}
+      >
         <FontAwesome name="close" size={24} color="#fff" />
       </TouchableOpacity>
 
@@ -202,7 +212,7 @@ export default function SignUp() {
         />
         <TouchableOpacity
           style={styles.eyeIcon}
-          onPress={() => setShowPassword(v => !v)}
+          onPress={() => setShowPassword((v) => !v)}
         >
           <FontAwesome
             name={showPassword ? "eye" : "eye-slash"}
@@ -226,7 +236,7 @@ export default function SignUp() {
         />
         <TouchableOpacity
           style={styles.eyeIcon}
-          onPress={() => setShowConfirmPassword(v => !v)}
+          onPress={() => setShowConfirmPassword((v) => !v)}
         >
           <FontAwesome
             name={showConfirmPassword ? "eye" : "eye-slash"}
@@ -241,10 +251,11 @@ export default function SignUp() {
         onPress={handleSignUp}
         disabled={loading}
       >
-        {loading
-          ? <ActivityIndicator color="#fff" />
-          : <Text style={styles.loginButtonText}>Sign up</Text>
-        }
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.loginButtonText}>Sign up</Text>
+        )}
       </TouchableOpacity>
 
       {/* single error line */}

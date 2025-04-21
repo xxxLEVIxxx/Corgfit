@@ -1,6 +1,6 @@
 import { sub } from "date-fns";
 import React from "react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -10,10 +10,31 @@ import {
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
-export default function charts() {
-  const width = Dimensions.get("window").width - 32;
-  // Sample data
-  const weightData = {
+// 1️⃣ Define your timeframes & data
+type Timeframe = "7d" | "1m" | "3m" | "6m" | "1y";
+interface ChartData {
+  labels: string[];
+  datasets: { data: number[] }[];
+}
+
+const weightChartData: Record<Timeframe, ChartData> = {
+  "7d": {
+    labels: [
+      "Mar 20",
+      "Mar 21",
+      "Mar 22",
+      "Mar 23",
+      "Mar 24",
+      "Mar 25",
+      "Mar 26",
+    ],
+    datasets: [{ data: [172.2, 172.0, 171.8, 171.7, 171.5, 171.4, 171.6] }],
+  },
+  "1m": {
+    labels: ["Feb 26", "Mar 5", "Mar 12", "Mar 19", "Mar 26"],
+    datasets: [{ data: [174.8, 173.5, 172.1, 171.4, 171.6] }],
+  },
+  "3m": {
     labels: [
       "Jan 1",
       "Jan 8",
@@ -30,58 +51,75 @@ export default function charts() {
       "Mar 26",
     ],
     datasets: [
-      {
-        data: [
-          185.0, 183.2, 181.5, 179.8, 178.3, 177.6, 175.9, 175.2, 174.8, 173.5,
-          172.1, 171.4, 171.6,
-        ],
-      },
-    ],
-  };
-  const timeOptions = [
-    { label: "Week", value: "7d" },
-    { label: "1 Month", value: "1m" },
-    { label: "3 Months", value: "3m" },
-    { label: "6 Months", value: "6m" },
-    { label: "1Y", value: "1y" },
-    { label: "3Y", value: "3y" },
-  ];
-  const [selectedRange, setSelectedRange] = useState("7d");
-  const diff =
-    weightData.datasets[0].data[weightData.datasets[0].data.length - 1] -
-    weightData.datasets[0].data[weightData.datasets[0].data.length - 2];
+      [
+        185.0, 183.2, 181.5, 179.8, 178.3, 177.6, 175.9, 175.2, 174.8, 173.5,
+        172.1, 171.4, 171.6,
+      ],
+    ].map((data) => ({ data })),
+  },
+  "6m": {
+    labels: ["Oct 1", "Nov 1", "Dec 1", "Jan 1", "Feb 1", "Mar 26"],
+    datasets: [{ data: [192.0, 188.0, 185.0, 182.0, 178.0, 171.6] }],
+  },
+  "1y": {
+    labels: ["May", "Jul", "Sep", "Nov", "Jan", "Mar"],
+    datasets: [{ data: [185, 178, 174, 170, 168, 171.6] }],
+  },
+};
 
-  const goalDiff = Math.abs(
-    165 - weightData.datasets[0].data[weightData.datasets[0].data.length - 1]
-  );
-  const processLabels = (labels, interval = 3) => {
-    return labels.map((label, index) => (index % interval === 0 ? label : ""));
-  };
-  const chartData = {
-    ...weightData,
-    labels: processLabels(weightData.labels),
-  };
+export default function charts() {
+  const width = Dimensions.get("window").width - 32;
+  const timeOptions: { label: string; value: Timeframe }[] = [
+    { label: "7d", value: "7d" },
+    { label: "1m", value: "1m" },
+    { label: "3m", value: "3m" },
+    { label: "6m", value: "6m" },
+    { label: "1y", value: "1y" },
+  ];
+
+  const [selectedRange, setSelectedRange] = useState<Timeframe>("3m");
+
+  // 2️⃣ Derive raw data for the current selection
+  const raw = weightChartData[selectedRange];
+
+  // 3️⃣ Compute label‐skip interval so we get ~6 ticks max
+  const labelInterval = useMemo(() => {
+    const maxTicks = 6;
+    return Math.max(1, Math.ceil(raw.labels.length / maxTicks));
+  }, [raw.labels.length]);
+
+  // 4️⃣ Build the actual chart data, with blanks where we're skipping
+  const chartData = useMemo(() => {
+    return {
+      labels: raw.labels.map((lbl, i) => (i % labelInterval === 0 ? lbl : "")),
+      datasets: raw.datasets,
+    };
+  }, [raw, labelInterval]);
+
+  // 5️⃣ Compute the diff & goal based on the raw series
+  const series = raw.datasets[0].data;
+  const diff = series[series.length - 1] - series[series.length - 2];
+  const goal = 165;
+  const goalDiff = Math.abs(goal - series[series.length - 1]);
 
   const chartConfig = {
     backgroundColor: "#212529",
     backgroundGradientFrom: "#212529",
     backgroundGradientTo: "#212529",
-    decimalPlaces: 0,
+    decimalPlaces: 1,
     color: () => `#FFFFFF`,
     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    propsForLabels: { fontSize: "10" },
   };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Current Weight</Text>
-      <Text style={styles.title}>
-        {weightData.datasets[0].data[weightData.datasets[0].data.length - 1]}{" "}
-        lbs
-      </Text>
+      <Text style={styles.title}>{series[series.length - 1]} lbs</Text>
 
       <Text style={diff < 0 ? styles.loseWeight : styles.gainWeight}>
         {diff > 0
-          ? `▲ ${diff.toPrecision(2)} lbs`
-          : `▼ ${Math.abs(diff.toPrecision(2))} lbs`}
+          ? `▲ ${Math.abs(diff).toFixed(1)} lbs`
+          : `▼ ${diff.toFixed(1)} lbs`}
       </Text>
 
       <View style={styles.chartWrapper}>
@@ -172,7 +210,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "RobotoSlab_700Bold",
     alignSelf: "flex-start",
-    marginTop: 20,
+    marginTop: 10,
   },
   gainWeight: {
     color: "#FE3903",
